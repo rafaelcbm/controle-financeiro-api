@@ -47,8 +47,8 @@ public class LancamentoController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<LancamentoResponseDTO>> obterTodasLancamentos(Authentication authentication) {
-        return ResponseEntity.ok(lancamentoService.obterTodasLancamentos(authentication.getName())
+    public ResponseEntity<List<LancamentoResponseDTO>> obterTodosLancamentos(Authentication authentication) {
+        return ResponseEntity.ok(lancamentoService.obterTodosLancamentos(authentication.getName())
                 .stream().map(LancamentoResponseDTO::new).toList());
     }
 
@@ -98,11 +98,34 @@ public class LancamentoController {
         return ResponseEntity.ok(new LancamentoResponseDTO(lancamentoService.obterLancamentoPorId(id, authentication.getName())));
     }
 
+    @Operation(
+            summary = "Retorna os lancamentos da competência informada.",
+            description = "Retorna os lancamentos da competência informada (formato AAAAMM). Ex.: 202405",
+            responses = {
+                    @ApiResponse(
+                            description = "Sucesso",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Não Autorizado / Token Inválido",
+                            responseCode = "403",
+                            content = @Content(schema = @Schema(implementation = Void.class))
+                    )
+            }
+    )
+    @GetMapping("/competencia/{competencia}")
+    public ResponseEntity<List<LancamentoResponseDTO>> obterLancamentoPorCompetencia(@PathVariable Integer competencia, Authentication authentication) {
+        return ResponseEntity.ok(
+                lancamentoService.obterLancamentosPorCompetencia(competencia, authentication.getName())
+                        .stream().map(LancamentoResponseDTO::new).toList()
+        );
+    }
+
 
     @Operation(
             summary = "Cadastra um lancamento.",
             description = "Cadastra um lancamento.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "201"
@@ -125,7 +148,7 @@ public class LancamentoController {
     @Operation(
             summary = "Atualiza dados de um lancamento.",
             description = "Atualiza dados de um lancamento.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -146,7 +169,7 @@ public class LancamentoController {
     @Operation(
             summary = "Atualiza um lancamento como PAGO.",
             description = "Atualiza um lancamento como PAGO.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -172,7 +195,7 @@ public class LancamentoController {
     @Operation(
             summary = "Atualiza um lancamento como NÃO PAGO.",
             description = "Atualiza um lancamento como NÃO PAGO.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -198,7 +221,7 @@ public class LancamentoController {
     @Operation(
             summary = "Remove um lancamento.",
             description = "Remove um lancamento.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "204"
