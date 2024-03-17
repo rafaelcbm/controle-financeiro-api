@@ -66,7 +66,7 @@ public class ContaService {
         return contaRepository.save(conta);
     }
 
-    protected void validarContaComMesmoNome(String nomeConta,List<Conta> contas) {
+    protected void validarContaComMesmoNome(String nomeConta, List<Conta> contas) {
 
         boolean possuiContaComMesmoNome = contas.stream()
                 .anyMatch(c -> c.getNome().equals(nomeConta));
