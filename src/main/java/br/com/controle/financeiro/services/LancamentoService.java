@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -48,6 +49,14 @@ public class LancamentoService {
         int ano = competencia / 100;
         int mes = competencia % 100;
 
+        if (ano < 1000 || ano > 9999) {
+            throw new NegocioException("Ano da competência informada inválido!");
+        }
+
+        if (mes < 1 || mes > 12) {
+            throw new NegocioException("Mês da competência informada inválido!");
+        }
+
         List<Lancamento> lancamentosCompetencia = todosLancamentos.stream()
                 .filter(lancamento -> lancamento.getData().getYear() == ano &&
                         lancamento.getData().getMonthValue() == mes)
@@ -65,6 +74,9 @@ public class LancamentoService {
         if (lancamentoDTO.valor().compareTo(BigDecimal.ZERO) <= 0) {
             throw new NegocioException("Valor do lançamento informado deve ser maior que 0!");
         }
+
+        List<Lancamento> lancamentos = this.obterTodosLancamentos(userLogin);
+        validarLancamentoComMesmoNomeData(lancamentoDTO.nome(), lancamentoDTO.parseDate(), lancamentos);
 
         Lancamento lancamento = Lancamento.builder()
                 .nome(lancamentoDTO.nome())
@@ -89,6 +101,9 @@ public class LancamentoService {
             throw new NegocioException("Valor do lançamento informado deve ser maior que 0!");
         }
 
+        List<Lancamento> lancamentos = this.obterTodosLancamentos(userLogin);
+        validarLancamentoComMesmoNomeData(lancamentoDTO.nome(), lancamentoDTO.parseDate(), lancamentos);
+
         Lancamento lancamento = lancamentoRepository.findById(idLancamento).orElseThrow();
 
         lancamento.setNome(lancamentoDTO.nome());
@@ -99,6 +114,17 @@ public class LancamentoService {
         lancamento.setPago(lancamentoDTO.pago());
 
         return lancamentoRepository.save(lancamento);
+    }
+
+    protected void validarLancamentoComMesmoNomeData(String nomeLancamento, LocalDate dataLancamento, List<Lancamento> lancamentos) {
+
+        boolean possuiLancamentoComMesmoNomeData = lancamentos.stream()
+                .anyMatch(l -> l.getNome().equals(nomeLancamento) &&
+                        l.getData().equals(dataLancamento)
+                );
+        if (possuiLancamentoComMesmoNomeData) {
+            throw new NegocioException("Lançamento com nome e data informados já existente.");
+        }
     }
 
     @Transactional
