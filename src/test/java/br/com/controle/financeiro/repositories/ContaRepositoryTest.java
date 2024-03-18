@@ -25,8 +25,8 @@ class ContaRepositoryTest {
     public void deveObterAsContasDoUsuario() {
 
         // Arrange
-        String userLogin="joao@teste.com";
-        String userPassword="senha_do_joao";
+        String userLogin = "joao@teste.com";
+        String userPassword = "senha_do_joao";
         var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
 
         String nomeContaCorrente = "Conta Corrente";
@@ -43,5 +43,24 @@ class ContaRepositoryTest {
 
         // Assert
         Assertions.assertEquals(2, contasUsuario.size());
+    }
+
+    @Test
+    public void deveCriarConta() {
+
+        // Arrange
+        String userLogin = "joao@teste.com";
+        String userPassword = "senha_do_joao";
+        var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
+        userRepository.save(user);
+
+        Conta novaConta = Conta.builder().nome("Nova Conta").user(user).build();
+        contaRepository.save(novaConta);
+
+        // Act
+        List<Conta> contas = contaRepository.findAll();
+
+        // Assert
+        Assertions.assertEquals(1, contas.size());
     }
 }
