@@ -34,7 +34,7 @@ class ContaServiceTest {
     ContaService contaService;
 
     @Test
-    void obterContaPorId() {
+    void deveObterContaPorId() {
 
         //Arrange
         String idConta = "123";

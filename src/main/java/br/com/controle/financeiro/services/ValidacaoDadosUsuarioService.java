@@ -33,12 +33,12 @@ public class ValidacaoDadosUsuarioService {
 
     public void validarContaDoUsuarioLogado(String idConta, String userLogin) {
 
-        UserDetails usuarioLogado = userRepository.findByLogin(userLogin);
         Optional<Conta> contaOptional = contaRepository.findById(idConta);
 
-        if (contaOptional.isPresent()) {
+        if (contaOptional.isPresent() ) {
             Conta conta = contaOptional.get();
-            if (!conta.getUser().getUsername().equals(usuarioLogado.getUsername())) {
+            UserDetails usuarioLogado = userRepository.findByLogin(userLogin);
+            if (usuarioLogado == null || !conta.getUser().getUsername().equals(usuarioLogado.getUsername())) {
                 throw new NegocioException("Conta não pertence ao usuário informado!");
             }
         } else {

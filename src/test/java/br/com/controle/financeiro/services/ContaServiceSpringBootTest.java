@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class ContaServiceIntegrationTest {
+class ContaServiceSpringBootTest {
 
     @MockBean
     private ContaRepository contaRepositoryMock;
@@ -36,7 +36,7 @@ class ContaServiceIntegrationTest {
     private ContaService contaService;
 
     @Test
-    void obterContaPorId() {
+    void deveObterContaPorId() {
 
         //Arrange
         String idConta = "123";
