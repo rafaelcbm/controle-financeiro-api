@@ -3,7 +3,6 @@ package br.com.controle.financeiro.controllers;
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
 import br.com.controle.financeiro.controllers.dto.ContaResponseDTO;
 import br.com.controle.financeiro.domain.Conta;
-import br.com.controle.financeiro.repositories.UserRepository;
 import br.com.controle.financeiro.services.ContaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,14 +25,14 @@ public class ContaController {
 
     private final ContaService contaService;
 
-    public ContaController(ContaService contaService, UserRepository userRepository) {
+    public ContaController(ContaService contaService) {
         this.contaService = contaService;
     }
 
     @Operation(
             summary = "Retorna todas as contas.",
             description = "Retorna todas as contas.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -54,7 +53,7 @@ public class ContaController {
     @Operation(
             summary = "Retorna uma conta específica do usuário.",
             description = "Retorna uma conta específica do usuário.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -74,7 +73,7 @@ public class ContaController {
     @Operation(
             summary = "Cadastra uma conta.",
             description = "Cadastra uma conta.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "201"
@@ -98,7 +97,7 @@ public class ContaController {
     @Operation(
             summary = "Atualiza dados de uma conta.",
             description = "Atualiza dados de uma conta.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -120,7 +119,7 @@ public class ContaController {
     @Operation(
             summary = "Remove uma conta.",
             description = "Remove uma conta.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "204"

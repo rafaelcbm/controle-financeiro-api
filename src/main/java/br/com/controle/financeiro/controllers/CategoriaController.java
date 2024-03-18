@@ -3,7 +3,6 @@ package br.com.controle.financeiro.controllers;
 import br.com.controle.financeiro.controllers.dto.CategoriaRequestDTO;
 import br.com.controle.financeiro.controllers.dto.CategoriaResponseDTO;
 import br.com.controle.financeiro.domain.Categoria;
-import br.com.controle.financeiro.repositories.UserRepository;
 import br.com.controle.financeiro.services.CategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,14 +25,14 @@ public class CategoriaController {
 
     private final CategoriaService categoriaService;
 
-    public CategoriaController(CategoriaService categoriaService, UserRepository userRepository) {
+    public CategoriaController(CategoriaService categoriaService) {
         this.categoriaService = categoriaService;
     }
 
     @Operation(
             summary = "Retorna todas as categorias.",
             description = "Retorna todas as categorias.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -54,7 +53,7 @@ public class CategoriaController {
     @Operation(
             summary = "Retorna uma categoria específica do usuário.",
             description = "Retorna uma categoria específica do usuário.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -74,7 +73,7 @@ public class CategoriaController {
     @Operation(
             summary = "Cadastra uma categoria.",
             description = "Cadastra uma categoria.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "201"
@@ -97,7 +96,7 @@ public class CategoriaController {
     @Operation(
             summary = "Atualiza dados de uma categoria.",
             description = "Atualiza dados de uma categoria.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "200"
@@ -119,7 +118,7 @@ public class CategoriaController {
     @Operation(
             summary = "Remove uma categoria.",
             description = "Remove uma categoria.",
-            responses ={
+            responses = {
                     @ApiResponse(
                             description = "Sucesso",
                             responseCode = "204"

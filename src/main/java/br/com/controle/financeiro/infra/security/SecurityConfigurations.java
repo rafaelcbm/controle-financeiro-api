@@ -30,7 +30,6 @@ public class SecurityConfigurations {
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 //Liberação de rotas para o Swagger
                                 .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
