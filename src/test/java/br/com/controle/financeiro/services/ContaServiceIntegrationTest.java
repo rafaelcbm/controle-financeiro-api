@@ -7,6 +7,7 @@ import br.com.controle.financeiro.domain.user.UserRole;
 import br.com.controle.financeiro.repositories.ContaRepository;
 import br.com.controle.financeiro.repositories.UserRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,26 +29,40 @@ class ContaServiceIntegrationTest {
 
     @Autowired
     private ContaService contaService;
+    private User usuarioPadrao = null;
+
+    @BeforeEach
+    public void prepararMassaTeste() {
+        this.limparBase();
+        this.criarUsuarioPadrao();
+    }
+
+    private void limparBase() {
+        contaRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    private void criarUsuarioPadrao() {
+        String userLogin = "joao@teste.com";
+        String userPassword = "senha_do_joao";
+        usuarioPadrao = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
+        userRepository.save(usuarioPadrao);
+    }
 
     @Test
     void deveObterContasDoUsuario() {
 
         //Arrange
-        String userLogin = "joao@teste.com";
-        String userPassword = "senha_do_joao";
-        var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-
         String nomeContaCorrente = "Conta Corrente";
-        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(user).build();
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(usuarioPadrao).build();
         String nomeCartaoCredito = "Cartão Crédito";
-        Conta contaCartaoCredito = Conta.builder().nome(nomeCartaoCredito).user(user).build();
+        Conta contaCartaoCredito = Conta.builder().nome(nomeCartaoCredito).user(usuarioPadrao).build();
 
-        userRepository.save(user);
         contaRepository.save(contaCorrente);
         contaRepository.save(contaCartaoCredito);
 
         // Act
-        List<Conta> contasUsuario = contaService.obterTodasContas(userLogin);
+        List<Conta> contasUsuario = contaService.obterTodasContas(usuarioPadrao.getLogin());
 
         //Assert
         Assertions.assertEquals(2, contasUsuario.size());
@@ -57,20 +72,15 @@ class ContaServiceIntegrationTest {
     void deveObterContaPorId() {
 
         //Arrange
-        String userLogin = "joao@teste.com";
-        String userPassword = "senha_do_joao";
-        var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-
         String nomeContaCorrente = "Conta Corrente";
-        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(user).build();
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(usuarioPadrao).build();
 
-        userRepository.save(user);
         contaRepository.save(contaCorrente);
         List<Conta> contasUsuario = contaRepository.findAll();
         String idConta = contasUsuario.getFirst().getId();
 
         // Act
-        Conta conta = contaService.obterContaPorId(idConta, userLogin);
+        Conta conta = contaService.obterContaPorId(idConta, usuarioPadrao.getLogin());
 
         //Assert
         Assertions.assertEquals(idConta, conta.getId());
@@ -81,35 +91,25 @@ class ContaServiceIntegrationTest {
     void deveCriarConta() {
 
         //Arrange
-        String userLogin = "joao@teste.com";
-        String userPassword = "senha_do_joao";
-        var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-        userRepository.save(user);
-
         String nomeContaCorrente = "Conta Corrente";
         ContaRequestDTO novaConta = new ContaRequestDTO(null, nomeContaCorrente);
 
         // Act
-        Conta conta = contaService.criarConta(novaConta, userLogin);
+        Conta conta = contaService.criarConta(novaConta, usuarioPadrao.getLogin());
 
         //Assert
         Assertions.assertNotNull(conta.getId());
         Assertions.assertEquals(nomeContaCorrente, conta.getNome());
-        Assertions.assertEquals(userLogin, conta.getUser().getLogin());
+        Assertions.assertEquals(usuarioPadrao.getLogin(), conta.getUser().getLogin());
     }
 
     @Test
     void deveAtualizarConta() {
 
         //Arrange
-        String userLogin = "joao@teste.com";
-        String userPassword = "senha_do_joao";
-        var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-
         String nomeContaCorrente = "Conta Corrente";
-        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(user).build();
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(usuarioPadrao).build();
 
-        userRepository.save(user);
         contaRepository.save(contaCorrente);
 
         List<Conta> contas = contaRepository.findAll();
@@ -118,26 +118,21 @@ class ContaServiceIntegrationTest {
         ContaRequestDTO dadosContaAlterada = new ContaRequestDTO(idConta, nomeContaAlterada);
 
         // Act
-        Conta contaAlterada = contaService.atualizarConta(idConta, dadosContaAlterada, userLogin);
+        Conta contaAlterada = contaService.atualizarConta(idConta, dadosContaAlterada, usuarioPadrao.getLogin());
 
         //Assert
         Assertions.assertEquals(idConta, contaAlterada.getId());
         Assertions.assertEquals(nomeContaAlterada, contaAlterada.getNome());
-        Assertions.assertEquals(userLogin, contaAlterada.getUser().getLogin());
+        Assertions.assertEquals(usuarioPadrao.getLogin(), contaAlterada.getUser().getLogin());
     }
 
     @Test
     void deveDeletarConta() {
 
         //Arrange
-        String userLogin = "joao@teste.com";
-        String userPassword = "senha_do_joao";
-        var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-
         String nomeContaCorrente = "Conta Corrente";
-        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(user).build();
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(usuarioPadrao).build();
 
-        userRepository.save(user);
         contaRepository.save(contaCorrente);
 
         List<Conta> contasAntesExclusao = contaRepository.findAll();
@@ -149,7 +144,7 @@ class ContaServiceIntegrationTest {
         String idConta = contasAntesExclusao.getFirst().getId();
 
         // Act
-        contaService.deletarConta(idConta, userLogin);
+        contaService.deletarConta(idConta, usuarioPadrao.getLogin());
 
         //Assert
         List<Conta> contasDepoisExclusao = contaRepository.findAll();
