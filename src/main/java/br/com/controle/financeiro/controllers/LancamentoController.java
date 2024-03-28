@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -138,7 +139,7 @@ public class LancamentoController {
             }
     )
     @PostMapping
-    public ResponseEntity<LancamentoResponseDTO> createLancamento(@RequestBody LancamentoRequestDTO lancamento, Authentication authentication) {
+    public ResponseEntity<LancamentoResponseDTO> createLancamento(@RequestBody @Valid LancamentoRequestDTO lancamento, Authentication authentication) {
 
         Lancamento lancamentoCriada = lancamentoService.criarLancamento(lancamento, authentication.getName());
 
