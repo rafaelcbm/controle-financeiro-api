@@ -55,12 +55,12 @@ class ContaRepositoryTest {
         userRepository.save(user);
 
         Conta novaConta = Conta.builder().nome("Nova Conta").user(user).build();
-        contaRepository.save(novaConta);
 
         // Act
-        List<Conta> contas = contaRepository.findAll();
+        contaRepository.save(novaConta);
 
         // Assert
+        List<Conta> contas = contaRepository.findAll();
         Assertions.assertEquals(1, contas.size());
     }
 }
