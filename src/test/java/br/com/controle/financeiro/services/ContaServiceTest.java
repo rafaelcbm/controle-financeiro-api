@@ -1,6 +1,8 @@
 package br.com.controle.financeiro.services;
 
+import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
 import br.com.controle.financeiro.domain.Conta;
+import br.com.controle.financeiro.domain.user.User;
 import br.com.controle.financeiro.repositories.ContaRepository;
 import br.com.controle.financeiro.repositories.UserRepository;
 import br.com.controle.financeiro.services.exception.NegocioException;
@@ -53,6 +55,31 @@ class ContaServiceTest {
         Mockito.verify(validacaoDadosUsuarioServiceMock)
                 .validarContaDoUsuarioLogado(idConta, loginUsuario);
         Mockito.verify(contaRepositoryMock).findById(idConta);
+    }
+
+    @Test
+    void deveCriarConta() {
+
+        //Arrange
+        String loginUsuario = "user@login.com";
+        String nomeNovaConta = "Conta Corrente";
+
+        ContaRequestDTO novaContaDto = new ContaRequestDTO(null, nomeNovaConta);
+
+        List<Conta> contasExistentes = List.of(Conta.builder().nome("Cartão Crédito").build());
+        Mockito.when(contaRepositoryMock.findAllContasByUserLogin(loginUsuario)).thenReturn(contasExistentes);
+
+        User usuario = User.builder().login(loginUsuario).id("1234").build();
+        Mockito.when(userRepositoryMock.findByLogin(loginUsuario)).thenReturn(usuario);
+
+        Conta contaEsperada = Conta.builder().nome(nomeNovaConta).user(usuario).build();
+        Mockito.when(contaRepositoryMock.save(Mockito.any(Conta.class))).thenReturn(contaEsperada);
+
+        //Act
+        Conta contaResultado = contaService.criarConta(novaContaDto, loginUsuario);
+
+        //Assert
+        Assertions.assertEquals(contaEsperada, contaResultado);
     }
 
     @Test
