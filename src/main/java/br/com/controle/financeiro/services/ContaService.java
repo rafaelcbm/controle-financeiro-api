@@ -41,7 +41,7 @@ public class ContaService {
     @Transactional
     public Conta criarConta(ContaRequestDTO contaDTO, String userLogin) {
 
-        List<Conta> contas = this.obterTodasContas(userLogin);
+        List<Conta> contas = contaRepository.findAllContasByUserLogin(userLogin);
         validarContaComMesmoNome(contaDTO.nome(), contas);
 
         UserDetails usuario = userRepository.findByLogin(userLogin);
@@ -57,7 +57,7 @@ public class ContaService {
 
         validacaoDadosUsuarioService.validarContaDoUsuarioLogado(idConta, userLogin);
 
-        List<Conta> contas = this.obterTodasContas(userLogin);
+        List<Conta> contas = contaRepository.findAllContasByUserLogin(userLogin);
         validarContaComMesmoNome(contaDTO.nome(), contas);
 
         Conta conta = contaRepository.findById(idConta).orElseThrow();

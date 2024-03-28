@@ -48,7 +48,7 @@ public class LancamentoService {
 
     public List<Lancamento> obterLancamentosPorCompetencia(Integer competencia, String userLogin) {
 
-        List<Lancamento> todosLancamentos = obterTodosLancamentos(userLogin);
+        List<Lancamento> todosLancamentos = lancamentoRepository.findLancamentosByUser(userLogin);
 
         int ano = competencia / 100;
         int mes = competencia % 100;
@@ -83,7 +83,7 @@ public class LancamentoService {
             throw new NegocioException("Valor do lançamento informado deve ser menor que " + limiteValorLancamento.toString() + "!");
         }
 
-        List<Lancamento> lancamentos = this.obterTodosLancamentos(userLogin);
+        List<Lancamento> lancamentos = lancamentoRepository.findLancamentosByUser(userLogin);
         validarLancamentoComMesmoNomeData(lancamentoDTO.nome(), lancamentoDTO.parseDate(), lancamentos);
 
         Lancamento lancamento = Lancamento.builder()

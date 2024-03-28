@@ -42,7 +42,7 @@ public class CategoriaService {
     @Transactional
     public Categoria criarCategoria(CategoriaRequestDTO categoriaDTO, String userLogin) {
 
-        List<Categoria> categorias = this.obterTodasCategorias(userLogin);
+        List<Categoria> categorias = categoriaRepository.findAllCategoriasByUserLogin(userLogin);
         validarCategoriaComMesmoNome(categoriaDTO.nome(), categorias);
 
         UserDetails usuario = userRepository.findByLogin(userLogin);
@@ -58,7 +58,7 @@ public class CategoriaService {
 
         validacaoDadosUsuarioService.validarCategoriaDoUsuarioLogado(idCategoria, userLogin);
 
-        List<Categoria> categorias = this.obterTodasCategorias(userLogin);
+        List<Categoria> categorias = categoriaRepository.findAllCategoriasByUserLogin(userLogin);
         validarCategoriaComMesmoNome(categoriaDTO.nome(), categorias);
 
         Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow();
