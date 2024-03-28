@@ -8,6 +8,7 @@ import br.com.controle.financeiro.repositories.LancamentoRepository;
 import br.com.controle.financeiro.repositories.dto.LancamentoCompletoDTO;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @Service
 public class LancamentoService {
+
+    @Value("${app.limite-valor-lancamento}")
+    private BigDecimal limiteValorLancamento;
 
     private final LancamentoRepository lancamentoRepository;
 
@@ -73,6 +77,10 @@ public class LancamentoService {
 
         if (lancamentoDTO.valor().compareTo(BigDecimal.ZERO) <= 0) {
             throw new NegocioException("Valor do lançamento informado deve ser maior que 0!");
+        }
+
+        if (lancamentoDTO.valor().compareTo(limiteValorLancamento) >= 0) {
+            throw new NegocioException("Valor do lançamento informado deve ser menor que " + limiteValorLancamento.toString() + "!");
         }
 
         List<Lancamento> lancamentos = this.obterTodosLancamentos(userLogin);
