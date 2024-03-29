@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -86,7 +87,7 @@ public class ContaController {
             }
     )
     @PostMapping
-    public ResponseEntity<ContaResponseDTO> createConta(@RequestBody ContaRequestDTO conta, Authentication authentication) {
+    public ResponseEntity<ContaResponseDTO> createConta(@RequestBody @Valid ContaRequestDTO conta, Authentication authentication) {
 
         Conta contaCriada = contaService.criarConta(conta, authentication.getName());
 
@@ -110,7 +111,7 @@ public class ContaController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<ContaResponseDTO> updateConta(@PathVariable String id, @RequestBody ContaRequestDTO contaRequestDTO, Authentication authentication) {
+    public ResponseEntity<ContaResponseDTO> updateConta(@PathVariable String id, @RequestBody @Valid ContaRequestDTO contaRequestDTO, Authentication authentication) {
         Conta contaAtualizada = contaService.atualizarConta(id, contaRequestDTO, authentication.getName());
         return ResponseEntity.ok(new ContaResponseDTO(contaAtualizada));
     }

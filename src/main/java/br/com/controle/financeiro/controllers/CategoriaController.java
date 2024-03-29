@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -86,7 +87,7 @@ public class CategoriaController {
             }
     )
     @PostMapping
-    public ResponseEntity<CategoriaResponseDTO> createCategoria(@RequestBody CategoriaRequestDTO categoria, Authentication authentication) {
+    public ResponseEntity<CategoriaResponseDTO> createCategoria(@RequestBody @Valid CategoriaRequestDTO categoria, Authentication authentication) {
 
         Categoria categoriaCriada = categoriaService.criarCategoria(categoria, authentication.getName());
 
@@ -109,7 +110,7 @@ public class CategoriaController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaResponseDTO> updateCategoria(@PathVariable String id, @RequestBody CategoriaRequestDTO categoriaRequestDTO, Authentication authentication) {
+    public ResponseEntity<CategoriaResponseDTO> updateCategoria(@PathVariable String id, @RequestBody @Valid CategoriaRequestDTO categoriaRequestDTO, Authentication authentication) {
         Categoria categoriaAtualizada = categoriaService.atualizarCategoria(id, categoriaRequestDTO, authentication.getName());
         return ResponseEntity.ok(new CategoriaResponseDTO(categoriaAtualizada));
     }

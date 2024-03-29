@@ -8,14 +8,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record LancamentoRequestDTO(String id,
-                                   @NotNull(message = "Campo obrigatório não informado.")
-                                   @NotBlank(message = "Campo obrigatório não deve ser vazio.")
+                                   @NotBlank(message = "Campo obrigatório não informado.")
                                    String nome,
-                                   @NotNull(message = "Campo obrigatório não informado.")
-                                   @NotBlank(message = "Campo obrigatório não deve ser vazio.")
+                                   @NotBlank(message = "Campo obrigatório não informado.")
                                    String idConta,
-                                   @NotNull(message = "Campo obrigatório não informado.")
-                                   @NotBlank(message = "Campo obrigatório não deve ser vazio.")
+                                   @NotBlank(message = "Campo obrigatório não informado.")
                                    String idCategoria,
                                    @NotNull(message = "Campo obrigatório não informado.")
                                    @Pattern(regexp = "\\d{2}-\\d{2}-\\d{4}", message = "Data deve estar no formato: dd-MM-yyyy")
