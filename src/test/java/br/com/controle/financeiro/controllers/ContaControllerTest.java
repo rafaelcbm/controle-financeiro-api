@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @WebMvcTest(ContaController.class)
 @Import(ContaController.class)
-@ContextConfiguration(classes = {ContaControllerTestConfig.class, CustomUserDetailsService.class})
+@ContextConfiguration(classes = {ControllerUserTestConfig.class, CustomUserDetailsService.class})
 class ContaControllerTest {
     @Autowired
     private MockMvc mockMvc;

@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 
 @TestConfiguration
-public class ContaControllerTestConfig {
+public class ControllerUserTestConfig {
 
 
     @Bean
