@@ -35,6 +35,25 @@ class ContaServiceTest {
     @InjectMocks
     ContaService contaService;
 
+   @Test
+    void deveObterTodasContas() {
+
+        //Arrange
+        String loginUsuario = "user@login.com";
+
+        List<Conta> contasEsperadas = List.of(
+                Conta.builder().nome("Conta Corrente").build(),
+                Conta.builder().nome("Cartão Crédito").build());
+
+        Mockito.when(contaRepositoryMock.findAllContasByUserLogin(loginUsuario)).thenReturn(contasEsperadas);
+
+        //Act
+        List<Conta> contasObtidas = contaService.obterTodasContas(loginUsuario);
+
+        //Assert
+        Assertions.assertEquals(contasEsperadas, contasObtidas);
+    }
+
     @Test
     void deveObterContaPorId() {
 
@@ -83,6 +102,75 @@ class ContaServiceTest {
     }
 
     @Test
+    void deveAtualizarConta() {
+
+        //Arrange
+        String loginUsuario = "user@login.com";
+        String nomeNovaConta = "Conta Conjunta";
+
+        ContaRequestDTO novaContaDto = new ContaRequestDTO(null, nomeNovaConta);
+
+        Conta cartaoCredito = Conta.builder().nome("Cartão Crédito").build();
+        Conta contaCorrente = Conta.builder().nome("Conta Corrente").build();
+        List<Conta> contasExistentes = List.of(cartaoCredito, contaCorrente);
+        Mockito.when(contaRepositoryMock.findAllContasByUserLogin(loginUsuario)).thenReturn(contasExistentes);
+
+        User usuario = User.builder().login(loginUsuario).id("1234").build();
+        String idConta = "id_Conta";
+        Mockito.when(contaRepositoryMock.findById(idConta)).thenReturn(Optional.of(contaCorrente));
+
+        Conta contaEsperada = Conta.builder().nome(nomeNovaConta).user(usuario).build();
+        Mockito.when(contaRepositoryMock.save(Mockito.any(Conta.class))).thenReturn(contaEsperada);
+
+        //Act
+        Conta contaResultado = contaService.atualizarConta(idConta, novaContaDto, loginUsuario);
+
+        //Assert
+        Assertions.assertEquals(contaEsperada, contaResultado);
+    }
+
+    @Test
+    void naoDeveAtualizarContaComMesmoNome() {
+
+        //Arrange
+        String loginUsuario = "user@login.com";
+        String nomeNovaConta = "Conta Corrente";
+
+        ContaRequestDTO novaContaDto = new ContaRequestDTO(null, nomeNovaConta);
+
+        Conta cartaoCredito = Conta.builder().nome("Cartão Crédito").build();
+        Conta contaCorrente = Conta.builder().nome("Conta Corrente").build();
+        List<Conta> contasExistentes = List.of(cartaoCredito, contaCorrente);
+        Mockito.when(contaRepositoryMock.findAllContasByUserLogin(loginUsuario)).thenReturn(contasExistentes);
+
+        String idConta = "id_Conta";
+
+        //Assert
+        Assertions.assertThrows(
+                //Assert
+                NegocioException.class,
+                //Act
+                () -> contaService.atualizarConta(idConta, novaContaDto, loginUsuario)
+        );
+    }
+
+    @Test
+    void deveDeletarConta() {
+
+        //Arrange
+        String loginUsuario = "user@login.com";
+        String idConta = "id_Conta";
+        Mockito.doNothing().when(contaRepositoryMock).deleteById(idConta);
+
+        //Act
+        contaService.deletarConta(idConta, loginUsuario);
+
+        //Assert
+        Mockito.verify(validacaoDadosUsuarioServiceMock).validarContaDoUsuarioLogado(idConta, loginUsuario);
+        Mockito.verify(contaRepositoryMock).deleteById(idConta);
+    }
+
+    @Test
     void naoDeveLancarErroAoValidarContaNomeDiferente() {
 
         //Arrange
@@ -99,7 +187,9 @@ class ContaServiceTest {
     void deveLancarErroAoValidarContaMesmoNome() {
 
         //Arrange
-        List<Conta> contas = List.of(Conta.builder().nome("Cartão Crédito").build());
+        List<Conta> contas = List.of(
+                Conta.builder().nome("Conta Corrente").build(),
+                Conta.builder().nome("Cartão Crédito").build());
 
         Assertions.assertThrows(
                 //Assert
