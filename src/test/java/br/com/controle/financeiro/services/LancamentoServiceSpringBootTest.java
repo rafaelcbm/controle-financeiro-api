@@ -72,7 +72,7 @@ class LancamentoServiceSpringBootTest {
         String idContaFake = "id_conta_fake";
         String idCategoriaFake = "id_categoria_fake";
         String dataLancamento = "03-05-2024";
-        BigDecimal valorLancamento = BigDecimal.valueOf(1000000.00);
+        BigDecimal valorLancamento = BigDecimal.valueOf(1000000);
         LancamentoRequestDTO novoLancamentoDto = new LancamentoRequestDTO(null, nomeNovoLancamento,
                 idContaFake, idCategoriaFake,
                 dataLancamento, valorLancamento, false);
