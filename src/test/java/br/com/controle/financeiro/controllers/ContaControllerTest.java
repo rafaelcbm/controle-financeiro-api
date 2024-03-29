@@ -3,11 +3,15 @@ package br.com.controle.financeiro.controllers;
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
 import br.com.controle.financeiro.domain.Conta;
 import br.com.controle.financeiro.services.ContaService;
+import br.com.controle.financeiro.services.exception.NegocioException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -15,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.util.AssertionErrors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -24,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @WebMvcTest(ContaController.class)
 @Import(ContaController.class)
-@ContextConfiguration(classes = {ControllerUserTestConfig.class, CustomUserDetailsService.class})
+@ContextConfiguration(classes = {GlobalExceptionHandler.class, NegocioException.class, ControllerUserTestConfig.class, CustomUserDetailsService.class})
 class ContaControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -44,6 +49,7 @@ class ContaControllerTest {
         Conta cartaoCredito = Conta.builder().id("5678").nome("Cartão de Crédito").build();
         Mockito.when(contaService.obterTodasContas("usuarioTeste"))
                 .thenReturn(List.of(contaConjunta, cartaoCredito));
+
 
         mockMvc.perform(
                         // Act
@@ -85,9 +91,9 @@ class ContaControllerTest {
     public void deveInserirUmaConta() throws Exception {
 
         // Arrange
-        ContaRequestDTO contaRequestDTO = new ContaRequestDTO(null, "Conta Teste");
+        ContaRequestDTO contaRequestDTO = new ContaRequestDTO(null, "Conta Corrente");
 
-        Conta conta = Conta.builder().id("1234").nome("Conta Teste").build();
+        Conta conta = Conta.builder().id("1234").nome("Conta Corrente").build();
         Mockito.when(contaService.criarConta(ArgumentMatchers.any(ContaRequestDTO.class), ArgumentMatchers.any(String.class)))
                 .thenReturn(conta);
 
@@ -106,7 +112,38 @@ class ContaControllerTest {
                 // Assert
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("1234"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Conta Teste"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Conta Corrente"));
+    }
+
+    @Test
+    @WithUserDetails("usuarioTeste")
+    public void naoDeveInserirUmaContaComMesmoNome() throws Exception {
+
+        // Arrange
+        Mockito.when(contaService.criarConta(ArgumentMatchers.any(ContaRequestDTO.class), ArgumentMatchers.any(String.class)))
+                .thenThrow(new NegocioException("Conta com nome informado já existente."));
+
+        ContaRequestDTO contaRequestDTO = new ContaRequestDTO(null, "Conta Corrente");
+        // Converte o objeto para JSON
+        String jsonContent = objectMapper.writeValueAsString(contaRequestDTO);
+
+        String contentAsString = mockMvc.perform(
+                        // Act
+                        post("/api/contas")
+                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                                .header("Authorization", "Bearer " + "fake-token-jwt")
+                                .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonContent)
+                )
+                // Assert
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof NegocioException))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Assertions.assertEquals(contentAsString,"Conta com nome informado já existente.");
     }
 
     @Test
