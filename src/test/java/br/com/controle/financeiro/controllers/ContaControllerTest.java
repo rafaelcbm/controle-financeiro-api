@@ -127,7 +127,7 @@ class ContaControllerTest {
         // Converte o objeto para JSON
         String jsonContent = objectMapper.writeValueAsString(contaRequestDTO);
 
-        String contentAsString = mockMvc.perform(
+        String resposta = mockMvc.perform(
                         // Act
                         post("/api/contas")
                                 .with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -136,14 +136,14 @@ class ContaControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(jsonContent)
                 )
-                // Assert
+        // Assert
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(result -> Assertions.assertTrue(result.getResolvedException() instanceof NegocioException))
+                .andExpect(result -> Assertions.assertInstanceOf(NegocioException.class, result.getResolvedException()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        Assertions.assertEquals(contentAsString,"Conta com nome informado já existente.");
+        Assertions.assertEquals(resposta,"Conta com nome informado já existente.");
     }
 
     @Test
@@ -177,6 +177,42 @@ class ContaControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("1234"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Conta Atualizada"));
+    }
+
+    @Test
+    @WithUserDetails("usuarioTeste")
+    public void naoDeveAtualizarUmaContaComMesmoNome() throws Exception {
+
+        // Arrange
+        String idConta = "1234";
+        ContaRequestDTO contaRequestDTO = new ContaRequestDTO(idConta, "Conta Atualizada");
+
+        Mockito.when(contaService.atualizarConta(
+                        idConta,
+                        contaRequestDTO,
+                        "usuarioTeste"))
+                .thenThrow(new NegocioException("Conta com nome informado já existente."));
+
+        // Converte o objeto para JSON
+        String jsonContent = objectMapper.writeValueAsString(contaRequestDTO);
+
+        String resposta = mockMvc.perform(
+                        // Act
+                        put("/api/contas/" + idConta)
+                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                                .header("Authorization", "Bearer " + "fake-token-jwt")
+                                .accept(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonContent)
+                )
+        // Assert
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(result -> Assertions.assertInstanceOf(NegocioException.class, result.getResolvedException()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Assertions.assertEquals(resposta,"Conta com nome informado já existente.");
     }
 
     @Test
