@@ -108,8 +108,11 @@ public class LancamentoService {
         if (lancamentoDTO.valor().compareTo(BigDecimal.ZERO) <= 0) {
             throw new NegocioException("Valor do lançamento informado deve ser maior que 0!");
         }
+        if (lancamentoDTO.valor().compareTo(valorMaximoLancamento) > 0) {
+            throw new NegocioException("Valor do lançamento informado não deve ser superior a " + valorMaximoLancamento.toString() + "!");
+        }
 
-        List<Lancamento> lancamentos = this.obterTodosLancamentos(userLogin);
+        List<Lancamento> lancamentos = lancamentoRepository.findLancamentosByUser(userLogin);
         validarLancamentoComMesmoNomeData(lancamentoDTO.nome(), lancamentoDTO.parseDate(), lancamentos);
 
         Lancamento lancamento = lancamentoRepository.findById(idLancamento).orElseThrow();
