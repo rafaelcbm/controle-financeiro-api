@@ -11,9 +11,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @OpenAPIDefinition(
         info = @Info(
                 contact = @Contact(
-                        name = "Rafael",
-                        email = "rafaelcbm@gmail.com",
-                        url = "https://www.linkedin.com/in/rafaelmenezes/"
+                        name = "Dev Name",
+                        email = "dev@email.com"
                 ),
                 description = "Documentação OpenApi da API de controle de gastos.",
                 title = "Especificação OpenApi da API",
