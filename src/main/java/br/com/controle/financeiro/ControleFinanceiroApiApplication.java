@@ -31,7 +31,7 @@ public class ControleFinanceiroApiApplication {
                                                CategoriaRepository categoriaRepository,
                                                LancamentoRepository lancamentoRepository) {
         return args -> {
-            var user = Usuario.builder().login("rafael").password("123456").role(UserRole.ADMIN).build();
+            var user = Usuario.builder().login("usuario").password("123456").role(UserRole.ADMIN).build();
 
             var conta = Conta.builder().nome("Conta Conjunta").usuario(user).build();
             var contaCartao = Conta.builder().nome("Cartão Crédito").usuario(user).build();
