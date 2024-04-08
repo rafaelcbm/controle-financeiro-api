@@ -4,7 +4,7 @@ import br.com.controle.financeiro.controllers.dto.LancamentoCompletoResponseDTO;
 import br.com.controle.financeiro.controllers.dto.LancamentoRequestDTO;
 import br.com.controle.financeiro.controllers.dto.LancamentoResponseDTO;
 import br.com.controle.financeiro.domain.Lancamento;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.services.LancamentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,7 +28,7 @@ public class LancamentoController {
 
     private final LancamentoService lancamentoService;
 
-    public LancamentoController(LancamentoService lancamentoService, UserRepository userRepository) {
+    public LancamentoController(LancamentoService lancamentoService, UsuarioRepository usuarioRepository) {
         this.lancamentoService = lancamentoService;
     }
 

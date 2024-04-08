@@ -2,9 +2,9 @@ package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
 import br.com.controle.financeiro.domain.Conta;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.ContaRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
@@ -28,7 +28,7 @@ class ContaServiceTest {
     @Mock
     ContaRepository contaRepositoryMock;
     @Mock
-    UserRepository userRepositoryMock;
+    UsuarioRepository usuarioRepositoryMock;
     @Mock
     ValidacaoDadosUsuarioService validacaoDadosUsuarioServiceMock;
 
@@ -45,7 +45,7 @@ class ContaServiceTest {
                 Conta.builder().nome("Conta Corrente").build(),
                 Conta.builder().nome("Cartão Crédito").build());
 
-        Mockito.when(contaRepositoryMock.findAllContasByUserLogin(loginUsuario)).thenReturn(contasEsperadas);
+        Mockito.when(contaRepositoryMock.findAllContasByUsuarioLogin(loginUsuario)).thenReturn(contasEsperadas);
 
         //Act
         List<Conta> contasObtidas = contaService.obterTodasContas(loginUsuario);
@@ -86,12 +86,12 @@ class ContaServiceTest {
         ContaRequestDTO novaContaDto = new ContaRequestDTO(null, nomeNovaConta);
 
         List<Conta> contasExistentes = List.of(Conta.builder().nome("Cartão Crédito").build());
-        Mockito.when(contaRepositoryMock.findAllContasByUserLogin(loginUsuario)).thenReturn(contasExistentes);
+        Mockito.when(contaRepositoryMock.findAllContasByUsuarioLogin(loginUsuario)).thenReturn(contasExistentes);
 
-        User usuario = User.builder().login(loginUsuario).id("1234").build();
-        Mockito.when(userRepositoryMock.findByLogin(loginUsuario)).thenReturn(usuario);
+        Usuario usuario = Usuario.builder().login(loginUsuario).id("1234").build();
+        Mockito.when(usuarioRepositoryMock.findByLogin(loginUsuario)).thenReturn(usuario);
 
-        Conta contaEsperada = Conta.builder().nome(nomeNovaConta).user(usuario).build();
+        Conta contaEsperada = Conta.builder().nome(nomeNovaConta).usuario(usuario).build();
         Mockito.when(contaRepositoryMock.save(Mockito.any(Conta.class))).thenReturn(contaEsperada);
 
         //Act
@@ -113,13 +113,13 @@ class ContaServiceTest {
         Conta cartaoCredito = Conta.builder().nome("Cartão Crédito").build();
         Conta contaCorrente = Conta.builder().nome("Conta Corrente").build();
         List<Conta> contasExistentes = List.of(cartaoCredito, contaCorrente);
-        Mockito.when(contaRepositoryMock.findAllContasByUserLogin(loginUsuario)).thenReturn(contasExistentes);
+        Mockito.when(contaRepositoryMock.findAllContasByUsuarioLogin(loginUsuario)).thenReturn(contasExistentes);
 
-        User usuario = User.builder().login(loginUsuario).id("1234").build();
+        Usuario usuario = Usuario.builder().login(loginUsuario).id("1234").build();
         String idConta = "id_Conta";
         Mockito.when(contaRepositoryMock.findById(idConta)).thenReturn(Optional.of(contaCorrente));
 
-        Conta contaEsperada = Conta.builder().nome(nomeNovaConta).user(usuario).build();
+        Conta contaEsperada = Conta.builder().nome(nomeNovaConta).usuario(usuario).build();
         Mockito.when(contaRepositoryMock.save(Mockito.any(Conta.class))).thenReturn(contaEsperada);
 
         //Act
@@ -141,7 +141,7 @@ class ContaServiceTest {
         Conta cartaoCredito = Conta.builder().nome("Cartão Crédito").build();
         Conta contaCorrente = Conta.builder().nome("Conta Corrente").build();
         List<Conta> contasExistentes = List.of(cartaoCredito, contaCorrente);
-        Mockito.when(contaRepositoryMock.findAllContasByUserLogin(loginUsuario)).thenReturn(contasExistentes);
+        Mockito.when(contaRepositoryMock.findAllContasByUsuarioLogin(loginUsuario)).thenReturn(contasExistentes);
 
         String idConta = "id_Conta";
 

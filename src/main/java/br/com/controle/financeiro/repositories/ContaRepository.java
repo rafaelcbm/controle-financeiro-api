@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ContaRepository extends JpaRepository<Conta, String> {
 
-    List<Conta> findAllContasByUserLogin(String userId);
+    List<Conta> findAllContasByUsuarioLogin(String userId);
 }

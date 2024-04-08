@@ -2,9 +2,9 @@ package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
 import br.com.controle.financeiro.domain.Conta;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.ContaRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,19 +17,19 @@ public class ContaService {
 
     private final ContaRepository contaRepository;
 
-    private final UserRepository userRepository;
+    private final UsuarioRepository usuarioRepository;
 
     private final ValidacaoDadosUsuarioService validacaoDadosUsuarioService;
 
-    public ContaService(ContaRepository ContaRepository, UserRepository userRepository, ValidacaoDadosUsuarioService validacaoDadosUsuarioService) {
+    public ContaService(ContaRepository ContaRepository, UsuarioRepository usuarioRepository, ValidacaoDadosUsuarioService validacaoDadosUsuarioService) {
 
         this.contaRepository = ContaRepository;
-        this.userRepository = userRepository;
+        this.usuarioRepository = usuarioRepository;
         this.validacaoDadosUsuarioService = validacaoDadosUsuarioService;
     }
 
     public List<Conta> obterTodasContas(String userLogin) {
-        return contaRepository.findAllContasByUserLogin(userLogin);
+        return contaRepository.findAllContasByUsuarioLogin(userLogin);
     }
 
     public Conta obterContaPorId(String idConta, String userLogin) {
@@ -41,13 +41,13 @@ public class ContaService {
     @Transactional
     public Conta criarConta(ContaRequestDTO contaDTO, String userLogin) {
 
-        List<Conta> contas = contaRepository.findAllContasByUserLogin(userLogin);
+        List<Conta> contas = contaRepository.findAllContasByUsuarioLogin(userLogin);
         validarContaComMesmoNome(contaDTO.nome(), contas);
 
-        UserDetails usuario = userRepository.findByLogin(userLogin);
+        UserDetails usuario = usuarioRepository.findByLogin(userLogin);
         Conta c = new Conta();
         c.setNome(contaDTO.nome());
-        c.setUser((User) usuario);
+        c.setUsuario((Usuario) usuario);
 
         return contaRepository.save(c);
     }
@@ -57,7 +57,7 @@ public class ContaService {
 
         validacaoDadosUsuarioService.validarContaDoUsuarioLogado(idConta, userLogin);
 
-        List<Conta> contas = contaRepository.findAllContasByUserLogin(userLogin);
+        List<Conta> contas = contaRepository.findAllContasByUsuarioLogin(userLogin);
         validarContaComMesmoNome(contaDTO.nome(), contas);
 
         Conta conta = contaRepository.findById(idConta).orElseThrow();

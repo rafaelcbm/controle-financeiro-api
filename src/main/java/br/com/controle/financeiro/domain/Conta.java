@@ -1,12 +1,12 @@
 package br.com.controle.financeiro.domain;
 
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 
-@Table
+@Table(name = "contas")
 @Entity
 @Data
 @Builder
@@ -21,9 +21,9 @@ public class Conta {
 
     private String nome;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "idUsuario")
     @ManyToOne
-    private User user;
+    private Usuario usuario;
 
     @OneToMany(mappedBy = "conta")
     private List<Lancamento> lancamentos;

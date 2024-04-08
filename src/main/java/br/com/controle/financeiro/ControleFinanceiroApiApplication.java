@@ -3,12 +3,12 @@ package br.com.controle.financeiro;
 import br.com.controle.financeiro.domain.Categoria;
 import br.com.controle.financeiro.domain.Conta;
 import br.com.controle.financeiro.domain.Lancamento;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.domain.user.UserRole;
 import br.com.controle.financeiro.repositories.CategoriaRepository;
 import br.com.controle.financeiro.repositories.ContaRepository;
 import br.com.controle.financeiro.repositories.LancamentoRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.services.ContaService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,19 +25,19 @@ public class ControleFinanceiroApiApplication {
     }
 
 //    @Bean
-    public CommandLineRunner commandLineRunner(UserRepository userRepository,
+    public CommandLineRunner commandLineRunner(UsuarioRepository usuarioRepository,
                                                ContaService contaService,
                                                ContaRepository contaRepository,
                                                CategoriaRepository categoriaRepository,
                                                LancamentoRepository lancamentoRepository) {
         return args -> {
-            var user = User.builder().login("rafael").password("123456").role(UserRole.ADMIN).build();
+            var user = Usuario.builder().login("rafael").password("123456").role(UserRole.ADMIN).build();
 
-            var conta = Conta.builder().nome("Conta Conjunta").user(user).build();
-            var contaCartao = Conta.builder().nome("Cartão Crédito").user(user).build();
+            var conta = Conta.builder().nome("Conta Conjunta").usuario(user).build();
+            var contaCartao = Conta.builder().nome("Cartão Crédito").usuario(user).build();
 
-            var categoriaAlimentacao = Categoria.builder().nome("Alimentação").user(user).build();
-            var categoriaTranporte = Categoria.builder().nome("Transporte").user(user).build();
+            var categoriaAlimentacao = Categoria.builder().nome("Alimentação").usuario(user).build();
+            var categoriaTranporte = Categoria.builder().nome("Transporte").usuario(user).build();
 
             var lancamento = Lancamento.builder()
                     .conta(conta).nome("Pipoca")
@@ -52,7 +52,7 @@ public class ControleFinanceiroApiApplication {
                     .data(LocalDate.now())
                     .build();
 
-            userRepository.save(user);
+            usuarioRepository.save(user);
 //            contaService.createConta(conta);
 //            contaService.createConta(contaCartao);
             categoriaRepository.save(categoriaAlimentacao);

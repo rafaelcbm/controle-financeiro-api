@@ -1,6 +1,6 @@
 package br.com.controle.financeiro.infra.security;
 
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -20,17 +20,17 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(User user){
+    public String generateToken(Usuario usuario){
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            List<String> roles = List.of(user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" ")));
+            List<String> roles = List.of(usuario.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" ")));
             String[] rolesArray = new String[roles.size()];
             roles.toArray(rolesArray);
 
             String token = JWT.create()
                     .withIssuer("auth-api")
-                    .withSubject(user.getLogin())
+                    .withSubject(usuario.getLogin())
                     .withExpiresAt(genExpirationDate())
                     .withArrayClaim("scope", rolesArray)
                     .sign(algorithm);

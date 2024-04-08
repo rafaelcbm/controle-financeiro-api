@@ -4,9 +4,9 @@ import br.com.controle.financeiro.controllers.dto.LancamentoRequestDTO;
 import br.com.controle.financeiro.domain.Categoria;
 import br.com.controle.financeiro.domain.Conta;
 import br.com.controle.financeiro.domain.Lancamento;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.LancamentoRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.repositories.dto.LancamentoCompletoDTO;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +35,7 @@ class LancamentoServiceTest {
     @Mock
     LancamentoRepository lancamentoRepositoryMock;
     @Mock
-    UserRepository userRepositoryMock;
+    UsuarioRepository usuarioRepositoryMock;
     @Mock
     ValidacaoDadosUsuarioService validacaoDadosUsuarioServiceMock;
 
@@ -52,7 +52,7 @@ class LancamentoServiceTest {
                 Lancamento.builder().nome("Pizza").build(),
                 Lancamento.builder().nome("Taxi").build());
 
-        Mockito.when(lancamentoRepositoryMock.findLancamentosByUser(loginUsuario)).thenReturn(lancamentosEsperados);
+        Mockito.when(lancamentoRepositoryMock.findLancamentosByUsuario(loginUsuario)).thenReturn(lancamentosEsperados);
 
         //Act
         List<Lancamento> lancamentosObtidos = lancamentoService.obterTodosLancamentos(loginUsuario);
@@ -71,7 +71,7 @@ class LancamentoServiceTest {
                 LancamentoCompletoDTO.builder().nome("Pizza").build(),
                 LancamentoCompletoDTO.builder().nome("Taxi").build());
 
-        Mockito.when(lancamentoRepositoryMock.findLancamentosCompletosByUser(loginUsuario)).thenReturn(lancamentosEsperados);
+        Mockito.when(lancamentoRepositoryMock.findLancamentosCompletosByUsuario(loginUsuario)).thenReturn(lancamentosEsperados);
 
         //Act
         List<LancamentoCompletoDTO> lancamentosObtidos = lancamentoService.obterTodosLancamentosCompletos(loginUsuario);
@@ -114,7 +114,7 @@ class LancamentoServiceTest {
                 Lancamento.builder().nome("Cinema").data(LocalDate.of(2024, Month.APRIL, 15)).build(),
                 Lancamento.builder().nome("Taxi").data(LocalDate.of(2025, Month.APRIL, 20)).build());
 
-        Mockito.when(lancamentoRepositoryMock.findLancamentosByUser(loginUsuario)).thenReturn(todosLancamentos);
+        Mockito.when(lancamentoRepositoryMock.findLancamentosByUsuario(loginUsuario)).thenReturn(todosLancamentos);
 
         Integer competencia = 202404;
 
@@ -150,17 +150,17 @@ class LancamentoServiceTest {
                 dataLancamento, valorLancamento, false);
 
         List<Lancamento> lancamentosExistentes = List.of(Lancamento.builder().nome("Cartão Crédito").build());
-        Mockito.when(lancamentoRepositoryMock.findLancamentosByUser(loginUsuario)).thenReturn(lancamentosExistentes);
+        Mockito.when(lancamentoRepositoryMock.findLancamentosByUsuario(loginUsuario)).thenReturn(lancamentosExistentes);
 
-        User usuario = User.builder().login(loginUsuario).id("1234").build();
+        Usuario usuario = Usuario.builder().login(loginUsuario).id("1234").build();
 
         Lancamento lancamentoEsperado = Lancamento.builder()
                 .nome(nomeNovoLancamento)
                 .valor(valorLancamento)
                 .data(LocalDate.parse(dataLancamento, java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                 .pago(false)
-                .conta(Conta.builder().nome("Cartão Crédito").user(usuario).build())
-                .categoria(Categoria.builder().nome("Alimentação").user(usuario).build())
+                .conta(Conta.builder().nome("Cartão Crédito").usuario(usuario).build())
+                .categoria(Categoria.builder().nome("Alimentação").usuario(usuario).build())
                 .build();
         Mockito.when(lancamentoRepositoryMock.save(Mockito.any(Lancamento.class))).thenReturn(lancamentoEsperado);
 
@@ -260,7 +260,7 @@ class LancamentoServiceTest {
                 .data(LocalDate.parse("04-05-2024", java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                 .build();
         List<Lancamento> lancamentosExistentes = List.of(lancamentoPizza, lancamentoTaxi);
-        Mockito.when(lancamentoRepositoryMock.findLancamentosByUser(loginUsuario)).thenReturn(lancamentosExistentes);
+        Mockito.when(lancamentoRepositoryMock.findLancamentosByUsuario(loginUsuario)).thenReturn(lancamentosExistentes);
 
         String idLancamento = "id_Lancamento";
         Mockito.when(lancamentoRepositoryMock.findById(idLancamento)).thenReturn(Optional.of(lancamentoTaxi));
@@ -305,7 +305,7 @@ class LancamentoServiceTest {
                 .data(LocalDate.parse("03-05-2024", java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                 .build();
         List<Lancamento> lancamentosExistentes = List.of(lancamentoPizza, lancamentoTaxi);
-        Mockito.when(lancamentoRepositoryMock.findLancamentosByUser(loginUsuario)).thenReturn(lancamentosExistentes);
+        Mockito.when(lancamentoRepositoryMock.findLancamentosByUsuario(loginUsuario)).thenReturn(lancamentosExistentes);
 
         //Assert
         Assertions.assertThrows(

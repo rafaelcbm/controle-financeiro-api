@@ -2,9 +2,9 @@ package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.CategoriaRequestDTO;
 import br.com.controle.financeiro.domain.Categoria;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.CategoriaRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
@@ -28,7 +28,7 @@ class CategoriaServiceTest {
     @Mock
     CategoriaRepository categoriaRepositoryMock;
     @Mock
-    UserRepository userRepositoryMock;
+    UsuarioRepository usuarioRepositoryMock;
     @Mock
     ValidacaoDadosUsuarioService validacaoDadosUsuarioServiceMock;
 
@@ -45,7 +45,7 @@ class CategoriaServiceTest {
                 Categoria.builder().nome("Transporte").build(),
                 Categoria.builder().nome("Alimentacao").build());
 
-        Mockito.when(categoriaRepositoryMock.findAllCategoriasByUserLogin(loginUsuario)).thenReturn(categoriasEsperadas);
+        Mockito.when(categoriaRepositoryMock.findAllCategoriasByUsuarioLogin(loginUsuario)).thenReturn(categoriasEsperadas);
 
         //Act
         List<Categoria> categoriasObtidas = categoriaService.obterTodasCategorias(loginUsuario);
@@ -86,12 +86,12 @@ class CategoriaServiceTest {
         CategoriaRequestDTO novaCategoriaDto = new CategoriaRequestDTO(null, nomeNovaCategoria);
 
         List<Categoria> categoriasExistentes = List.of(Categoria.builder().nome("Alimentacao").build());
-        Mockito.when(categoriaRepositoryMock.findAllCategoriasByUserLogin(loginUsuario)).thenReturn(categoriasExistentes);
+        Mockito.when(categoriaRepositoryMock.findAllCategoriasByUsuarioLogin(loginUsuario)).thenReturn(categoriasExistentes);
 
-        User usuario = User.builder().login(loginUsuario).id("1234").build();
-        Mockito.when(userRepositoryMock.findByLogin(loginUsuario)).thenReturn(usuario);
+        Usuario usuario = Usuario.builder().login(loginUsuario).id("1234").build();
+        Mockito.when(usuarioRepositoryMock.findByLogin(loginUsuario)).thenReturn(usuario);
 
-        Categoria categoriaEsperada = Categoria.builder().nome(nomeNovaCategoria).user(usuario).build();
+        Categoria categoriaEsperada = Categoria.builder().nome(nomeNovaCategoria).usuario(usuario).build();
         Mockito.when(categoriaRepositoryMock.save(Mockito.any(Categoria.class))).thenReturn(categoriaEsperada);
 
         //Act
@@ -113,13 +113,13 @@ class CategoriaServiceTest {
         Categoria alimentacao = Categoria.builder().nome("Alimentacao").build();
         Categoria transporte = Categoria.builder().nome("Transporte").build();
         List<Categoria> categoriasExistentes = List.of(alimentacao, transporte);
-        Mockito.when(categoriaRepositoryMock.findAllCategoriasByUserLogin(loginUsuario)).thenReturn(categoriasExistentes);
+        Mockito.when(categoriaRepositoryMock.findAllCategoriasByUsuarioLogin(loginUsuario)).thenReturn(categoriasExistentes);
 
-        User usuario = User.builder().login(loginUsuario).id("1234").build();
+        Usuario usuario = Usuario.builder().login(loginUsuario).id("1234").build();
         String idCategoria = "id_Categoria";
         Mockito.when(categoriaRepositoryMock.findById(idCategoria)).thenReturn(Optional.of(transporte));
 
-        Categoria categoriaEsperada = Categoria.builder().nome(nomeNovaCategoria).user(usuario).build();
+        Categoria categoriaEsperada = Categoria.builder().nome(nomeNovaCategoria).usuario(usuario).build();
         Mockito.when(categoriaRepositoryMock.save(Mockito.any(Categoria.class))).thenReturn(categoriaEsperada);
 
         //Act
@@ -141,7 +141,7 @@ class CategoriaServiceTest {
         Categoria alimentacao = Categoria.builder().nome("Alimentacao").build();
         Categoria transporte = Categoria.builder().nome("Transporte").build();
         List<Categoria> categoriasExistentes = List.of(alimentacao, transporte);
-        Mockito.when(categoriaRepositoryMock.findAllCategoriasByUserLogin(loginUsuario)).thenReturn(categoriasExistentes);
+        Mockito.when(categoriaRepositoryMock.findAllCategoriasByUsuarioLogin(loginUsuario)).thenReturn(categoriasExistentes);
 
         String idCategoria = "id_Categoria";
 

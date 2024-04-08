@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Table
+@Table(name = "lancamentos")
 @Entity
 @Data
 @Builder
@@ -22,11 +22,11 @@ public class Lancamento {
 
     private String nome;
 
-    @JoinColumn(name = "conta_id")
+    @JoinColumn(name = "idConta")
     @ManyToOne
     private Conta conta;
 
-    @JoinColumn(name = "categoria_id")
+    @JoinColumn(name = "idCategoria")
     @ManyToOne
     private Categoria categoria;
 

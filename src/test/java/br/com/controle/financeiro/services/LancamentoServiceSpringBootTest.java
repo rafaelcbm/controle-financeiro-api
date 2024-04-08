@@ -4,9 +4,9 @@ import br.com.controle.financeiro.controllers.dto.LancamentoRequestDTO;
 import br.com.controle.financeiro.domain.Categoria;
 import br.com.controle.financeiro.domain.Conta;
 import br.com.controle.financeiro.domain.Lancamento;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.LancamentoRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ class LancamentoServiceSpringBootTest {
     @MockBean
     LancamentoRepository lancamentoRepositoryMock;
     @MockBean
-    UserRepository userRepositoryMock;
+    UsuarioRepository usuarioRepositoryMock;
     @MockBean
     ValidacaoDadosUsuarioService validacaoDadosUsuarioServiceMock;
 
@@ -78,18 +78,18 @@ class LancamentoServiceSpringBootTest {
                 dataLancamento, valorLancamento, false);
 
         List<Lancamento> lancamentosExistentes = List.of(Lancamento.builder().nome("Cartão Crédito").build());
-        Mockito.when(lancamentoRepositoryMock.findLancamentosByUser(loginUsuario)).thenReturn(lancamentosExistentes);
+        Mockito.when(lancamentoRepositoryMock.findLancamentosByUsuario(loginUsuario)).thenReturn(lancamentosExistentes);
 
-        User usuario = User.builder().login(loginUsuario).id("1234").build();
-        Mockito.when(userRepositoryMock.findByLogin(loginUsuario)).thenReturn(usuario);
+        Usuario usuario = Usuario.builder().login(loginUsuario).id("1234").build();
+        Mockito.when(usuarioRepositoryMock.findByLogin(loginUsuario)).thenReturn(usuario);
 
         Lancamento lancamentoEsperado = Lancamento.builder()
                 .nome(nomeNovoLancamento)
                 .valor(valorLancamento)
                 .data(LocalDate.parse(dataLancamento, java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                 .pago(false)
-                .conta(Conta.builder().nome("Cartão Crédito").user(usuario).build())
-                .categoria(Categoria.builder().nome("Alimentação").user(usuario).build())
+                .conta(Conta.builder().nome("Cartão Crédito").usuario(usuario).build())
+                .categoria(Categoria.builder().nome("Alimentação").usuario(usuario).build())
                 .build();
         Mockito.when(lancamentoRepositoryMock.save(Mockito.any(Lancamento.class))).thenReturn(lancamentoEsperado);
 

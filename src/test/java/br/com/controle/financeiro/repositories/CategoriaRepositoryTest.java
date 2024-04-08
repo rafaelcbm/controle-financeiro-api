@@ -1,7 +1,7 @@
 package br.com.controle.financeiro.repositories;
 
 import br.com.controle.financeiro.domain.Categoria;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.domain.user.UserRole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import java.util.List;
 class CategoriaRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private CategoriaRepository categoriaRepository;
@@ -27,19 +27,19 @@ class CategoriaRepositoryTest {
         // Arrange
         String userLogin = "joao@teste.com";
         String userPassword = "senha_do_joao";
-        var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
+        var user = Usuario.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
 
         String nomeCategoriaCorrente = "Categoria Corrente";
-        Categoria categoriaCorrente = Categoria.builder().nome(nomeCategoriaCorrente).user(user).build();
+        Categoria categoriaCorrente = Categoria.builder().nome(nomeCategoriaCorrente).usuario(user).build();
         String nomeCartaoCredito = "Cartão Crédito";
-        Categoria categoriaCartaoCredito = Categoria.builder().nome(nomeCartaoCredito).user(user).build();
+        Categoria categoriaCartaoCredito = Categoria.builder().nome(nomeCartaoCredito).usuario(user).build();
 
-        userRepository.save(user);
+        usuarioRepository.save(user);
         categoriaRepository.save(categoriaCorrente);
         categoriaRepository.save(categoriaCartaoCredito);
 
         // Act
-        List<Categoria> categoriasUsuario = categoriaRepository.findAllCategoriasByUserLogin(userLogin);
+        List<Categoria> categoriasUsuario = categoriaRepository.findAllCategoriasByUsuarioLogin(userLogin);
 
         // Assert
         Assertions.assertEquals(2, categoriasUsuario.size());
@@ -51,10 +51,10 @@ class CategoriaRepositoryTest {
         // Arrange
         String userLogin = "joao@teste.com";
         String userPassword = "senha_do_joao";
-        var user = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-        userRepository.save(user);
+        var user = Usuario.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
+        usuarioRepository.save(user);
 
-        Categoria novaCategoria = Categoria.builder().nome("Nova Categoria").user(user).build();
+        Categoria novaCategoria = Categoria.builder().nome("Nova Categoria").usuario(user).build();
 
         // Act
         categoriaRepository.save(novaCategoria);

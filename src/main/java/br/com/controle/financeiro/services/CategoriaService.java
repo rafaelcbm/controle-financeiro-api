@@ -2,9 +2,9 @@ package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.CategoriaRequestDTO;
 import br.com.controle.financeiro.domain.Categoria;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.CategoriaRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,19 +17,19 @@ public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
 
-    private final UserRepository userRepository;
+    private final UsuarioRepository usuarioRepository;
 
     private final ValidacaoDadosUsuarioService validacaoDadosUsuarioService;
 
-    public CategoriaService(CategoriaRepository CategoriaRepository, UserRepository userRepository, ValidacaoDadosUsuarioService validacaoDadosUsuarioService) {
+    public CategoriaService(CategoriaRepository categoriaRepository, UsuarioRepository usuarioRepository, ValidacaoDadosUsuarioService validacaoDadosUsuarioService) {
 
-        this.categoriaRepository = CategoriaRepository;
-        this.userRepository = userRepository;
+        this.categoriaRepository = categoriaRepository;
+        this.usuarioRepository = usuarioRepository;
         this.validacaoDadosUsuarioService = validacaoDadosUsuarioService;
     }
 
     public List<Categoria> obterTodasCategorias(String userLogin) {
-        return categoriaRepository.findAllCategoriasByUserLogin(userLogin);
+        return categoriaRepository.findAllCategoriasByUsuarioLogin(userLogin);
     }
 
     public Categoria obterCategoriaPorId(String idCategoria, String userLogin) {
@@ -42,13 +42,13 @@ public class CategoriaService {
     @Transactional
     public Categoria criarCategoria(CategoriaRequestDTO categoriaDTO, String userLogin) {
 
-        List<Categoria> categorias = categoriaRepository.findAllCategoriasByUserLogin(userLogin);
+        List<Categoria> categorias = categoriaRepository.findAllCategoriasByUsuarioLogin(userLogin);
         validarCategoriaComMesmoNome(categoriaDTO.nome(), categorias);
 
-        UserDetails usuario = userRepository.findByLogin(userLogin);
+        UserDetails usuario = usuarioRepository.findByLogin(userLogin);
         Categoria c = new Categoria();
         c.setNome(categoriaDTO.nome());
-        c.setUser((User) usuario);
+        c.setUsuario((Usuario) usuario);
 
         return categoriaRepository.save(c);
     }
@@ -58,7 +58,7 @@ public class CategoriaService {
 
         validacaoDadosUsuarioService.validarCategoriaDoUsuarioLogado(idCategoria, userLogin);
 
-        List<Categoria> categorias = categoriaRepository.findAllCategoriasByUserLogin(userLogin);
+        List<Categoria> categorias = categoriaRepository.findAllCategoriasByUsuarioLogin(userLogin);
         validarCategoriaComMesmoNome(categoriaDTO.nome(), categorias);
 
         Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow();

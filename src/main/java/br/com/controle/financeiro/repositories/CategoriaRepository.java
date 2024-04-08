@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CategoriaRepository extends JpaRepository<Categoria, String> {
 
-    List<Categoria> findAllCategoriasByUserLogin(String userId);
+    List<Categoria> findAllCategoriasByUsuarioLogin(String userId);
 }

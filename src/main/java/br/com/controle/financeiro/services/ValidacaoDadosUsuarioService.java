@@ -6,7 +6,7 @@ import br.com.controle.financeiro.domain.Lancamento;
 import br.com.controle.financeiro.repositories.CategoriaRepository;
 import br.com.controle.financeiro.repositories.ContaRepository;
 import br.com.controle.financeiro.repositories.LancamentoRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -22,13 +22,13 @@ public class ValidacaoDadosUsuarioService {
 
     private final LancamentoRepository lancamentoRepository;
 
-    private final UserRepository userRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public ValidacaoDadosUsuarioService(ContaRepository contaRepository, CategoriaRepository categoriaRepository, LancamentoRepository lancamentoRepository, UserRepository userRepository) {
+    public ValidacaoDadosUsuarioService(ContaRepository contaRepository, CategoriaRepository categoriaRepository, LancamentoRepository lancamentoRepository, UsuarioRepository usuarioRepository) {
         this.contaRepository = contaRepository;
         this.categoriaRepository = categoriaRepository;
         this.lancamentoRepository = lancamentoRepository;
-        this.userRepository = userRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public void validarContaDoUsuarioLogado(String idConta, String userLogin) {
@@ -37,8 +37,8 @@ public class ValidacaoDadosUsuarioService {
 
         if (contaOptional.isPresent() ) {
             Conta conta = contaOptional.get();
-            UserDetails usuarioLogado = userRepository.findByLogin(userLogin);
-            if (usuarioLogado == null || !conta.getUser().getUsername().equals(usuarioLogado.getUsername())) {
+            UserDetails usuarioLogado = usuarioRepository.findByLogin(userLogin);
+            if (usuarioLogado == null || !conta.getUsuario().getUsername().equals(usuarioLogado.getUsername())) {
                 throw new NegocioException("Conta não pertence ao usuário informado!");
             }
         } else {
@@ -48,12 +48,12 @@ public class ValidacaoDadosUsuarioService {
 
     public void validarCategoriaDoUsuarioLogado(String idCategoria, String userLogin) {
 
-        UserDetails usuarioLogado = userRepository.findByLogin(userLogin);
+        UserDetails usuarioLogado = usuarioRepository.findByLogin(userLogin);
         Optional<Categoria> categoriaOptional = categoriaRepository.findById(idCategoria);
 
         if (categoriaOptional.isPresent()) {
             Categoria categoria = categoriaOptional.get();
-            if (!categoria.getUser().getUsername().equals(usuarioLogado.getUsername())) {
+            if (!categoria.getUsuario().getUsername().equals(usuarioLogado.getUsername())) {
                 throw new NegocioException("Categoria não pertence ao usuário informado!");
             }
         } else {
@@ -63,12 +63,12 @@ public class ValidacaoDadosUsuarioService {
 
     public void validarLancamentoDoUsuarioLogado(String idLancamento, String userLogin) {
 
-        UserDetails usuarioLogado = userRepository.findByLogin(userLogin);
+        UserDetails usuarioLogado = usuarioRepository.findByLogin(userLogin);
         Optional<Lancamento> lancamentoOptional = lancamentoRepository.findById(idLancamento);
 
         if (lancamentoOptional.isPresent()) {
             Lancamento lancamento = lancamentoOptional.get();
-            if (!lancamento.getConta().getUser().getUsername().equals(usuarioLogado.getUsername())) {
+            if (!lancamento.getConta().getUsuario().getUsername().equals(usuarioLogado.getUsername())) {
                 throw new NegocioException("Lançamento não pertence ao usuário informado!");
             }
         } else {

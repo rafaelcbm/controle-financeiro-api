@@ -3,9 +3,9 @@ package br.com.controle.financeiro.controllers;
 import br.com.controle.financeiro.domain.user.AuthenticationDTO;
 import br.com.controle.financeiro.domain.user.LoginResponseDTO;
 import br.com.controle.financeiro.domain.user.RegisterDTO;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.infra.security.TokenService;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository repository;
+    private UsuarioRepository repository;
     @Autowired
     private TokenService tokenService;
 
@@ -50,9 +50,9 @@ public class AuthenticationController {
         if (this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.login(), encryptedPassword, data.role());
+        Usuario newUsuario = new Usuario(data.login(), encryptedPassword, data.role());
 
-        this.repository.save(newUser);
+        this.repository.save(newUsuario);
 
         return ResponseEntity.ok().build();
     }
@@ -76,7 +76,7 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
+        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
 
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }

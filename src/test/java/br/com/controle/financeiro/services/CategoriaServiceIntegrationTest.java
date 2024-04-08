@@ -2,10 +2,10 @@ package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.CategoriaRequestDTO;
 import br.com.controle.financeiro.domain.Categoria;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.domain.user.UserRole;
 import br.com.controle.financeiro.repositories.CategoriaRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,13 +23,13 @@ class CategoriaServiceIntegrationTest {
     @Autowired
     private CategoriaRepository categoriaRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UsuarioRepository usuarioRepository;
     @Autowired
     private ValidacaoDadosUsuarioService validacaoDadosUsuarioService;
 
     @Autowired
     private CategoriaService categoriaService;
-    private User usuarioPadrao = null;
+    private Usuario usuarioPadrao = null;
 
     @BeforeEach
     public void prepararMassaTeste() {
@@ -39,14 +39,14 @@ class CategoriaServiceIntegrationTest {
 
     private void limparBase() {
         categoriaRepository.deleteAll();
-        userRepository.deleteAll();
+        usuarioRepository.deleteAll();
     }
 
     private void criarUsuarioPadrao() {
         String userLogin = "joao@teste.com";
         String userPassword = "senha_do_joao";
-        usuarioPadrao = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-        userRepository.save(usuarioPadrao);
+        usuarioPadrao = Usuario.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
+        usuarioRepository.save(usuarioPadrao);
     }
 
     @Test
@@ -54,9 +54,9 @@ class CategoriaServiceIntegrationTest {
 
         //Arrange
         String nomeCategoriaTransporte = "Transporte";
-        Categoria categoriaTransporte = Categoria.builder().nome(nomeCategoriaTransporte).user(usuarioPadrao).build();
+        Categoria categoriaTransporte = Categoria.builder().nome(nomeCategoriaTransporte).usuario(usuarioPadrao).build();
         String nomeCategoriaAlimentacao = "Alimentacao";
-        Categoria categoriaCartaoCredito = Categoria.builder().nome(nomeCategoriaAlimentacao).user(usuarioPadrao).build();
+        Categoria categoriaCartaoCredito = Categoria.builder().nome(nomeCategoriaAlimentacao).usuario(usuarioPadrao).build();
 
         categoriaRepository.save(categoriaTransporte);
         categoriaRepository.save(categoriaCartaoCredito);
@@ -73,7 +73,7 @@ class CategoriaServiceIntegrationTest {
 
         //Arrange
         String nomeCategoriaTransporte = "Transporte";
-        Categoria categoriaTransporte = Categoria.builder().nome(nomeCategoriaTransporte).user(usuarioPadrao).build();
+        Categoria categoriaTransporte = Categoria.builder().nome(nomeCategoriaTransporte).usuario(usuarioPadrao).build();
 
         categoriaRepository.save(categoriaTransporte);
         List<Categoria> categoriasUsuario = categoriaRepository.findAll();
@@ -100,7 +100,7 @@ class CategoriaServiceIntegrationTest {
         //Assert
         Assertions.assertNotNull(categoria.getId());
         Assertions.assertEquals(nomeCategoriaTransporte, categoria.getNome());
-        Assertions.assertEquals(usuarioPadrao.getLogin(), categoria.getUser().getLogin());
+        Assertions.assertEquals(usuarioPadrao.getLogin(), categoria.getUsuario().getLogin());
     }
 
     @Test
@@ -108,7 +108,7 @@ class CategoriaServiceIntegrationTest {
 
         //Arrange
         String nomeCategoriaTransporte = "Transporte";
-        Categoria categoriaTransporte = Categoria.builder().nome(nomeCategoriaTransporte).user(usuarioPadrao).build();
+        Categoria categoriaTransporte = Categoria.builder().nome(nomeCategoriaTransporte).usuario(usuarioPadrao).build();
 
         categoriaRepository.save(categoriaTransporte);
 
@@ -123,7 +123,7 @@ class CategoriaServiceIntegrationTest {
         //Assert
         Assertions.assertEquals(idCategoria, categoriaAlterada.getId());
         Assertions.assertEquals(nomeCategoriaAlterada, categoriaAlterada.getNome());
-        Assertions.assertEquals(usuarioPadrao.getLogin(), categoriaAlterada.getUser().getLogin());
+        Assertions.assertEquals(usuarioPadrao.getLogin(), categoriaAlterada.getUsuario().getLogin());
     }
 
     @Test
@@ -131,7 +131,7 @@ class CategoriaServiceIntegrationTest {
 
         //Arrange
         String nomeCategoriaTransporte = "Transporte";
-        Categoria categoriaTransporte = Categoria.builder().nome(nomeCategoriaTransporte).user(usuarioPadrao).build();
+        Categoria categoriaTransporte = Categoria.builder().nome(nomeCategoriaTransporte).usuario(usuarioPadrao).build();
 
         categoriaRepository.save(categoriaTransporte);
 

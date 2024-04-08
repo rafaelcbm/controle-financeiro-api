@@ -32,11 +32,11 @@ public class LancamentoService {
     }
 
     public List<Lancamento> obterTodosLancamentos(String userLogin) {
-        return lancamentoRepository.findLancamentosByUser(userLogin);
+        return lancamentoRepository.findLancamentosByUsuario(userLogin);
     }
 
     public List<LancamentoCompletoDTO> obterTodosLancamentosCompletos(String userLogin) {
-        return lancamentoRepository.findLancamentosCompletosByUser(userLogin);
+        return lancamentoRepository.findLancamentosCompletosByUsuario(userLogin);
     }
 
     public Lancamento obterLancamentoPorId(String idLancamento, String userLogin) {
@@ -48,7 +48,7 @@ public class LancamentoService {
 
     public List<Lancamento> obterLancamentosPorCompetencia(Integer competencia, String userLogin) {
 
-        List<Lancamento> todosLancamentos = lancamentoRepository.findLancamentosByUser(userLogin);
+        List<Lancamento> todosLancamentos = lancamentoRepository.findLancamentosByUsuario(userLogin);
 
         int ano = competencia / 100;
         int mes = competencia % 100;
@@ -83,7 +83,7 @@ public class LancamentoService {
             throw new NegocioException("Valor do lançamento informado não deve ser superior a " + valorMaximoLancamento.toString() + "!");
         }
 
-        List<Lancamento> lancamentos = lancamentoRepository.findLancamentosByUser(userLogin);
+        List<Lancamento> lancamentos = lancamentoRepository.findLancamentosByUsuario(userLogin);
         validarLancamentoComMesmoNomeData(lancamentoDTO.nome(), lancamentoDTO.parseDate(), lancamentos);
 
         Lancamento lancamento = Lancamento.builder()
@@ -112,7 +112,7 @@ public class LancamentoService {
             throw new NegocioException("Valor do lançamento informado não deve ser superior a " + valorMaximoLancamento.toString() + "!");
         }
 
-        List<Lancamento> lancamentos = lancamentoRepository.findLancamentosByUser(userLogin);
+        List<Lancamento> lancamentos = lancamentoRepository.findLancamentosByUsuario(userLogin);
         validarLancamentoComMesmoNomeData(lancamentoDTO.nome(), lancamentoDTO.parseDate(), lancamentos);
 
         Lancamento lancamento = lancamentoRepository.findById(idLancamento).orElseThrow();

@@ -2,10 +2,10 @@ package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
 import br.com.controle.financeiro.domain.Conta;
-import br.com.controle.financeiro.domain.user.User;
+import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.domain.user.UserRole;
 import br.com.controle.financeiro.repositories.ContaRepository;
-import br.com.controle.financeiro.repositories.UserRepository;
+import br.com.controle.financeiro.repositories.UsuarioRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,13 +23,13 @@ class ContaServiceIntegrationTest {
     @Autowired
     private ContaRepository contaRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UsuarioRepository usuarioRepository;
     @Autowired
     private ValidacaoDadosUsuarioService validacaoDadosUsuarioService;
 
     @Autowired
     private ContaService contaService;
-    private User usuarioPadrao = null;
+    private Usuario usuarioPadrao = null;
 
     @BeforeEach
     public void prepararMassaTeste() {
@@ -39,14 +39,14 @@ class ContaServiceIntegrationTest {
 
     private void limparBase() {
         contaRepository.deleteAll();
-        userRepository.deleteAll();
+        usuarioRepository.deleteAll();
     }
 
     private void criarUsuarioPadrao() {
         String userLogin = "joao@teste.com";
         String userPassword = "senha_do_joao";
-        usuarioPadrao = User.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-        userRepository.save(usuarioPadrao);
+        usuarioPadrao = Usuario.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
+        usuarioRepository.save(usuarioPadrao);
     }
 
     @Test
@@ -54,9 +54,9 @@ class ContaServiceIntegrationTest {
 
         //Arrange
         String nomeContaCorrente = "Conta Corrente";
-        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(usuarioPadrao).build();
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).usuario(usuarioPadrao).build();
         String nomeCartaoCredito = "Cartão Crédito";
-        Conta contaCartaoCredito = Conta.builder().nome(nomeCartaoCredito).user(usuarioPadrao).build();
+        Conta contaCartaoCredito = Conta.builder().nome(nomeCartaoCredito).usuario(usuarioPadrao).build();
 
         contaRepository.save(contaCorrente);
         contaRepository.save(contaCartaoCredito);
@@ -73,7 +73,7 @@ class ContaServiceIntegrationTest {
 
         //Arrange
         String nomeContaCorrente = "Conta Corrente";
-        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(usuarioPadrao).build();
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).usuario(usuarioPadrao).build();
 
         contaRepository.save(contaCorrente);
         List<Conta> contasUsuario = contaRepository.findAll();
@@ -100,7 +100,7 @@ class ContaServiceIntegrationTest {
         //Assert
         Assertions.assertNotNull(conta.getId());
         Assertions.assertEquals(nomeContaCorrente, conta.getNome());
-        Assertions.assertEquals(usuarioPadrao.getLogin(), conta.getUser().getLogin());
+        Assertions.assertEquals(usuarioPadrao.getLogin(), conta.getUsuario().getLogin());
     }
 
     @Test
@@ -108,7 +108,7 @@ class ContaServiceIntegrationTest {
 
         //Arrange
         String nomeContaCorrente = "Conta Corrente";
-        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(usuarioPadrao).build();
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).usuario(usuarioPadrao).build();
 
         contaRepository.save(contaCorrente);
 
@@ -123,7 +123,7 @@ class ContaServiceIntegrationTest {
         //Assert
         Assertions.assertEquals(idConta, contaAlterada.getId());
         Assertions.assertEquals(nomeContaAlterada, contaAlterada.getNome());
-        Assertions.assertEquals(usuarioPadrao.getLogin(), contaAlterada.getUser().getLogin());
+        Assertions.assertEquals(usuarioPadrao.getLogin(), contaAlterada.getUsuario().getLogin());
     }
 
     @Test
@@ -131,7 +131,7 @@ class ContaServiceIntegrationTest {
 
         //Arrange
         String nomeContaCorrente = "Conta Corrente";
-        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).user(usuarioPadrao).build();
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).usuario(usuarioPadrao).build();
 
         contaRepository.save(contaCorrente);
 
