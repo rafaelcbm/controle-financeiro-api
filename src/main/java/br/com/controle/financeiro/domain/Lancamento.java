@@ -22,11 +22,11 @@ public class Lancamento {
 
     private String nome;
 
-    @JoinColumn(name = "idConta")
+    @JoinColumn(name = "id_conta")
     @ManyToOne
     private Conta conta;
 
-    @JoinColumn(name = "idCategoria")
+    @JoinColumn(name = "id_categoria")
     @ManyToOne
     private Categoria categoria;
 

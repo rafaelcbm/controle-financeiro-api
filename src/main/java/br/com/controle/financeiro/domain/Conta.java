@@ -21,7 +21,7 @@ public class Conta {
 
     private String nome;
 
-    @JoinColumn(name = "idUsuario")
+    @JoinColumn(name = "id_usuario")
     @ManyToOne
     private Usuario usuario;
 
