@@ -1,17 +1,17 @@
 package br.com.controle.financeiro.controllers;
 
+import br.com.controle.financeiro.controllers.config.ControllerUserTestConfig;
+import br.com.controle.financeiro.controllers.config.CustomUserDetailsService;
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
 import br.com.controle.financeiro.domain.Conta;
 import br.com.controle.financeiro.services.ContaService;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.util.AssertionErrors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 

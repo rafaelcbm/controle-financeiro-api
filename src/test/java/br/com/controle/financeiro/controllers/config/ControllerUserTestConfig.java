@@ -1,4 +1,4 @@
-package br.com.controle.financeiro.controllers;
+package br.com.controle.financeiro.controllers.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;

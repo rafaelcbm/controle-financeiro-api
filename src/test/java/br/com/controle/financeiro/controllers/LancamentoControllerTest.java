@@ -1,5 +1,7 @@
 package br.com.controle.financeiro.controllers;
 
+import br.com.controle.financeiro.controllers.config.ControllerUserTestConfig;
+import br.com.controle.financeiro.controllers.config.CustomUserDetailsService;
 import br.com.controle.financeiro.controllers.dto.LancamentoRequestDTO;
 import br.com.controle.financeiro.domain.Categoria;
 import br.com.controle.financeiro.domain.Conta;
