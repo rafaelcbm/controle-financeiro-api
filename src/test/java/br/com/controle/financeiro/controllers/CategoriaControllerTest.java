@@ -159,7 +159,7 @@ class CategoriaControllerTest {
                 .thenReturn(categoriaAtualizada);
 
         // Converte o objeto para JSON
-        String jsonContent = objectMapper.writeValueAsString(categoriaAtualizada);
+        String jsonContent = objectMapper.writeValueAsString(categoriaRequestDTO);
 
         mockMvc.perform(
                         // Act

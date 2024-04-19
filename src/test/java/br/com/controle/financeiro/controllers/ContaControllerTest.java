@@ -162,7 +162,7 @@ class ContaControllerTest {
                 .thenReturn(contaAtualizada);
 
         // Converte o objeto para JSON
-        String jsonContent = objectMapper.writeValueAsString(contaAtualizada);
+        String jsonContent = objectMapper.writeValueAsString(contaRequestDTO);
 
         mockMvc.perform(
                         // Act
