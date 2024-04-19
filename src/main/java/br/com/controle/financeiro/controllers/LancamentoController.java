@@ -28,7 +28,7 @@ public class LancamentoController {
 
     private final LancamentoService lancamentoService;
 
-    public LancamentoController(LancamentoService lancamentoService, UsuarioRepository usuarioRepository) {
+    public LancamentoController(LancamentoService lancamentoService) {
         this.lancamentoService = lancamentoService;
     }
 

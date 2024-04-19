@@ -71,6 +71,7 @@ public class ContaController {
         return ResponseEntity.ok(contaService.obterContaPorId(id, authentication.getName()));
     }
 
+
     @Operation(
             summary = "Cadastra uma conta.",
             description = "Cadastra uma conta.",
