@@ -6,7 +6,6 @@ import br.com.controle.financeiro.domain.Conta;
 import br.com.controle.financeiro.domain.Lancamento;
 import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.LancamentoRepository;
-import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.repositories.dto.LancamentoCompletoDTO;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import org.junit.jupiter.api.Assertions;
@@ -34,8 +33,6 @@ class LancamentoServiceTest {
 
     @Mock
     LancamentoRepository lancamentoRepositoryMock;
-    @Mock
-    UsuarioRepository usuarioRepositoryMock;
     @Mock
     ValidacaoDadosUsuarioService validacaoDadosUsuarioServiceMock;
 
@@ -439,7 +436,7 @@ class LancamentoServiceTest {
         Assumptions.assumeTrue(lancamentosParametrizados != null);
 
         lancamentoService.validarLancamentoComMesmoNomeData(
-                nomeContaParametrizada,dataLancamentoParametrizado,  lancamentosParametrizados);
+                nomeContaParametrizada, dataLancamentoParametrizado, lancamentosParametrizados);
     }
 
     static Stream<Arguments> provedorParametrosNomesDatasLancamentos() {

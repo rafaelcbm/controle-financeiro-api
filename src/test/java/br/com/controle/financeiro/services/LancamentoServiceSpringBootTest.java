@@ -6,7 +6,6 @@ import br.com.controle.financeiro.domain.Conta;
 import br.com.controle.financeiro.domain.Lancamento;
 import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.LancamentoRepository;
-import br.com.controle.financeiro.repositories.UsuarioRepository;
 import br.com.controle.financeiro.repositories.dto.LancamentoCompletoDTO;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import org.junit.jupiter.api.Assertions;
@@ -38,8 +37,7 @@ class LancamentoServiceSpringBootTest {
 
     @MockBean
     LancamentoRepository lancamentoRepositoryMock;
-    @MockBean
-    UsuarioRepository usuarioRepositoryMock;
+
     @MockBean
     ValidacaoDadosUsuarioService validacaoDadosUsuarioServiceMock;
 
@@ -108,6 +106,33 @@ class LancamentoServiceSpringBootTest {
                 .validarLancamentoDoUsuarioLogado(idLancamento, loginUsuario);
         Mockito.verify(lancamentoRepositoryMock).findById(idLancamento);
     }
+
+    @Test
+    void deveObterLancamentosPorCompetencia() {
+
+        //Arrange
+        String loginUsuario = "user@login.com";
+
+        List<Lancamento> todosLancamentos = List.of(
+                Lancamento.builder().nome("Pizza").data(LocalDate.of(2024, Month.JANUARY, 4)).build(),
+                Lancamento.builder().nome("Viagem").data(LocalDate.of(2024, Month.APRIL, 30)).build(),
+                Lancamento.builder().nome("Cinema").data(LocalDate.of(2024, Month.APRIL, 15)).build(),
+                Lancamento.builder().nome("Taxi").data(LocalDate.of(2025, Month.APRIL, 20)).build());
+
+        Mockito.when(lancamentoRepositoryMock.findLancamentosByUsuario(loginUsuario)).thenReturn(todosLancamentos);
+
+        Integer competencia = 202404;
+
+        //Act
+        List<Lancamento> lancamentosObtidos = lancamentoService.obterLancamentosPorCompetencia(competencia, loginUsuario);
+
+        //Assert
+        Assertions.assertEquals(2, lancamentosObtidos.size());
+
+        Assertions.assertTrue(lancamentosObtidos.stream().anyMatch(l -> l.getNome().equals("Viagem")));
+        Assertions.assertTrue(lancamentosObtidos.stream().anyMatch(l -> l.getNome().equals("Cinema")));
+    }
+
 
     @Test
     void deveCriarLancamento() {
@@ -415,7 +440,7 @@ class LancamentoServiceSpringBootTest {
         Assumptions.assumeTrue(lancamentosParametrizados != null);
 
         lancamentoService.validarLancamentoComMesmoNomeData(
-                nomeContaParametrizada,dataLancamentoParametrizado,  lancamentosParametrizados);
+                nomeContaParametrizada, dataLancamentoParametrizado, lancamentosParametrizados);
     }
 
     static Stream<Arguments> provedorParametrosNomesDatasLancamentos() {
