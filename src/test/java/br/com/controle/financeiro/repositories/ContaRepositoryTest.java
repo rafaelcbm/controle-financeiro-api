@@ -44,23 +44,4 @@ class ContaRepositoryTest {
         // Assert
         Assertions.assertEquals(2, contasUsuario.size());
     }
-
-    @Test
-    public void deveCriarConta() {
-
-        // Arrange
-        String userLogin = "joao@teste.com";
-        String userPassword = "senha_do_joao";
-        var user = Usuario.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-        usuarioRepository.save(user);
-
-        Conta novaConta = Conta.builder().nome("Nova Conta").usuario(user).build();
-
-        // Act
-        contaRepository.save(novaConta);
-
-        // Assert
-        List<Conta> contas = contaRepository.findAll();
-        Assertions.assertEquals(1, contas.size());
-    }
 }

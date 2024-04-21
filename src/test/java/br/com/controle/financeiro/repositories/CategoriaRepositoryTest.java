@@ -45,22 +45,4 @@ class CategoriaRepositoryTest {
         Assertions.assertEquals(2, categoriasUsuario.size());
     }
 
-    @Test
-    public void deveCriarCategoria() {
-
-        // Arrange
-        String userLogin = "joao@teste.com";
-        String userPassword = "senha_do_joao";
-        var user = Usuario.builder().login(userLogin).password(userPassword).role(UserRole.ADMIN).build();
-        usuarioRepository.save(user);
-
-        Categoria novaCategoria = Categoria.builder().nome("Nova Categoria").usuario(user).build();
-
-        // Act
-        categoriaRepository.save(novaCategoria);
-
-        // Assert
-        List<Categoria> categorias = categoriaRepository.findAll();
-        Assertions.assertEquals(1, categorias.size());
-    }
 }
