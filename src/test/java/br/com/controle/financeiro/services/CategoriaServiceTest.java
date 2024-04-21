@@ -9,30 +9,29 @@ import br.com.controle.financeiro.services.exception.NegocioException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class CategoriaServiceTest {
 
-    @Mock
+    @MockBean
     CategoriaRepository categoriaRepositoryMock;
-    @Mock
+    @MockBean
     UsuarioRepository usuarioRepositoryMock;
-    @Mock
+    @MockBean
     ValidacaoDadosUsuarioService validacaoDadosUsuarioServiceMock;
 
-    @InjectMocks
+    @Autowired
     CategoriaService categoriaService;
 
     @Test
