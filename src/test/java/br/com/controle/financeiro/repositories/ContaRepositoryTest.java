@@ -1,8 +1,8 @@
 package br.com.controle.financeiro.repositories;
 
 import br.com.controle.financeiro.domain.Conta;
-import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.domain.user.UserRole;
+import br.com.controle.financeiro.domain.user.Usuario;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
