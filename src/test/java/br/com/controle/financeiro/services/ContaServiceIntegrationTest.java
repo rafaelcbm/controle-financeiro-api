@@ -24,8 +24,6 @@ class ContaServiceIntegrationTest {
     private ContaRepository contaRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
-    @Autowired
-    private ValidacaoDadosUsuarioService validacaoDadosUsuarioService;
 
     @Autowired
     private ContaService contaService;

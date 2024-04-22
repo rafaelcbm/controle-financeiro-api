@@ -24,8 +24,6 @@ class CategoriaServiceIntegrationTest {
     private CategoriaRepository categoriaRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
-    @Autowired
-    private ValidacaoDadosUsuarioService validacaoDadosUsuarioService;
 
     @Autowired
     private CategoriaService categoriaService;
