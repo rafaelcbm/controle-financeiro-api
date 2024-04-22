@@ -5,6 +5,8 @@ import br.com.controle.financeiro.domain.Categoria;
 import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.domain.user.UserRole;
 import br.com.controle.financeiro.repositories.CategoriaRepository;
+import br.com.controle.financeiro.repositories.ContaRepository;
+import br.com.controle.financeiro.repositories.LancamentoRepository;
 import br.com.controle.financeiro.repositories.UsuarioRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,11 @@ import java.util.List;
 @SpringBootTest
 class CategoriaServiceIntegrationTest {
 
+
+    @Autowired
+    private LancamentoRepository lancamentoRepository;
+    @Autowired
+    private ContaRepository contaRepository;
     @Autowired
     private CategoriaRepository categoriaRepository;
     @Autowired
@@ -36,7 +43,9 @@ class CategoriaServiceIntegrationTest {
     }
 
     private void limparBase() {
+        lancamentoRepository.deleteAll();
         categoriaRepository.deleteAll();
+        contaRepository.deleteAll();
         usuarioRepository.deleteAll();
     }
 
