@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @SpringBootTest
-class ContaServiceSpringBootTest {
+class ContaServiceTest {
 
     @MockBean
     private ContaRepository contaRepositoryMock;

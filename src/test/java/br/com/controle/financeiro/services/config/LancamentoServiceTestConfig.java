@@ -1,4 +1,4 @@
-package br.com.controle.financeiro.services;
+package br.com.controle.financeiro.services.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

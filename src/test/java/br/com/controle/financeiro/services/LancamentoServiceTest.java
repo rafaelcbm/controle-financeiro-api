@@ -7,6 +7,7 @@ import br.com.controle.financeiro.domain.Lancamento;
 import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.LancamentoRepository;
 import br.com.controle.financeiro.repositories.dto.LancamentoCompletoDTO;
+import br.com.controle.financeiro.services.config.LancamentoServiceTestConfig;
 import br.com.controle.financeiro.services.exception.NegocioException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
@@ -33,7 +34,7 @@ import java.util.stream.Stream;
 @ContextConfiguration(classes = {LancamentoServiceTestConfig.class})
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-class LancamentoServiceSpringBootTest {
+class LancamentoServiceTest {
 
     @MockBean
     LancamentoRepository lancamentoRepositoryMock;
