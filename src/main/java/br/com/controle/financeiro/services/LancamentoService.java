@@ -25,9 +25,9 @@ public class LancamentoService {
 
     private final ValidacaoDadosUsuarioService validacaoDadosUsuarioService;
 
-    public LancamentoService(LancamentoRepository LancamentoRepository, ValidacaoDadosUsuarioService validacaoDadosUsuarioService) {
+    public LancamentoService(LancamentoRepository lancamentoRepository, ValidacaoDadosUsuarioService validacaoDadosUsuarioService) {
 
-        this.lancamentoRepository = LancamentoRepository;
+        this.lancamentoRepository = lancamentoRepository;
         this.validacaoDadosUsuarioService = validacaoDadosUsuarioService;
     }
 

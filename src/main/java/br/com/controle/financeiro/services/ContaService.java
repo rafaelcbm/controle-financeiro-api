@@ -21,9 +21,9 @@ public class ContaService {
 
     private final ValidacaoDadosUsuarioService validacaoDadosUsuarioService;
 
-    public ContaService(ContaRepository ContaRepository, UsuarioRepository usuarioRepository, ValidacaoDadosUsuarioService validacaoDadosUsuarioService) {
+    public ContaService(ContaRepository contaRepository, UsuarioRepository usuarioRepository, ValidacaoDadosUsuarioService validacaoDadosUsuarioService) {
 
-        this.contaRepository = ContaRepository;
+        this.contaRepository = contaRepository;
         this.usuarioRepository = usuarioRepository;
         this.validacaoDadosUsuarioService = validacaoDadosUsuarioService;
     }
@@ -45,6 +45,7 @@ public class ContaService {
         validarContaComMesmoNome(contaDTO.nome(), contas);
 
         UserDetails usuario = usuarioRepository.findByLogin(userLogin);
+
         Conta c = new Conta();
         c.setNome(contaDTO.nome());
         c.setUsuario((Usuario) usuario);
