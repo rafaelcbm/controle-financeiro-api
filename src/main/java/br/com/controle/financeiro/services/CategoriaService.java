@@ -80,6 +80,11 @@ public class CategoriaService {
     public void deletarCategoria(String idCategoria, String userLogin) {
 
         validacaoDadosUsuarioService.validarCategoriaDoUsuarioLogado(idCategoria, userLogin);
+
+        Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow();
+        if (!categoria.getLancamentos().isEmpty()) {
+            throw new NegocioException("Não é possível remover essa categoria, pois ela possui lançamentos associados.");
+        }
         categoriaRepository.deleteById(idCategoria);
     }
 }

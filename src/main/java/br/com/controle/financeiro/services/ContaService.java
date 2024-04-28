@@ -1,6 +1,7 @@
 package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
+import br.com.controle.financeiro.domain.Categoria;
 import br.com.controle.financeiro.domain.Conta;
 import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.ContaRepository;
@@ -80,6 +81,12 @@ public class ContaService {
     public void deletarConta(String idConta, String userLogin) {
 
         validacaoDadosUsuarioService.validarContaDoUsuarioLogado(idConta, userLogin);
+
+
+        Conta conta = contaRepository.findById(idConta).orElseThrow();
+        if (!conta.getLancamentos().isEmpty()) {
+            throw new NegocioException("Não é possível remover essa conta, pois ela possui lançamentos associados.");
+        }
         contaRepository.deleteById(idConta);
     }
 }
