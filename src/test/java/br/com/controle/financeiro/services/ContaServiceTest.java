@@ -1,7 +1,9 @@
 package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
+import br.com.controle.financeiro.domain.Categoria;
 import br.com.controle.financeiro.domain.Conta;
+import br.com.controle.financeiro.domain.Lancamento;
 import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.ContaRepository;
 import br.com.controle.financeiro.repositories.UsuarioRepository;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -159,6 +163,9 @@ class ContaServiceTest {
         //Arrange
         String loginUsuario = "user@login.com";
         String idConta = "id_Conta";
+
+        Mockito.when(contaRepositoryMock.findById(idConta)).thenReturn(Optional.of(Conta.builder().build()));
+
         Mockito.doNothing().when(contaRepositoryMock).deleteById(idConta);
 
         //Act
@@ -167,6 +174,35 @@ class ContaServiceTest {
         //Assert
         Mockito.verify(validacaoDadosUsuarioServiceMock).validarContaDoUsuarioLogado(idConta, loginUsuario);
         Mockito.verify(contaRepositoryMock).deleteById(idConta);
+    }
+
+    @Test
+    void naoDeveDeletarContaComLancamentoAssociado() {
+
+        //Arrange
+        String loginUsuario = "user@login.com";
+        String idConta = "id_Conta";
+
+        Conta contaCorrente = Conta.builder().nome("Conta Corrente").build();
+
+        List<Lancamento> lancamentos = List.of(Lancamento.builder()
+                .conta(contaCorrente).nome("Pipoca")
+                .categoria(Categoria.builder().build())
+                .valor(BigDecimal.valueOf(123.45))
+                .data(LocalDate.now())
+                .build());
+
+        contaCorrente.setLancamentos(lancamentos);
+
+        Mockito.when(contaRepositoryMock.findById(idConta)).thenReturn(Optional.of(contaCorrente));
+
+        //Assert
+        Assertions.assertThrows(
+                //Assert
+                NegocioException.class,
+                //Act
+                () -> contaService.deletarConta(idConta, loginUsuario)
+        );
     }
 
     @Test

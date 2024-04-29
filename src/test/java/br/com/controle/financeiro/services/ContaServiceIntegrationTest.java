@@ -1,11 +1,16 @@
 package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.ContaRequestDTO;
+import br.com.controle.financeiro.domain.Categoria;
 import br.com.controle.financeiro.domain.Conta;
+import br.com.controle.financeiro.domain.Lancamento;
 import br.com.controle.financeiro.domain.user.UserRole;
 import br.com.controle.financeiro.domain.user.Usuario;
+import br.com.controle.financeiro.repositories.CategoriaRepository;
 import br.com.controle.financeiro.repositories.ContaRepository;
+import br.com.controle.financeiro.repositories.LancamentoRepository;
 import br.com.controle.financeiro.repositories.UsuarioRepository;
+import br.com.controle.financeiro.services.exception.NegocioException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
@@ -24,6 +31,11 @@ class ContaServiceIntegrationTest {
     private ContaRepository contaRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+    @Autowired
+    private LancamentoRepository lancamentoRepository;
 
     @Autowired
     private ContaService contaService;
@@ -147,5 +159,48 @@ class ContaServiceIntegrationTest {
         //Assert
         List<Conta> contasDepoisExclusao = contaRepository.findAll();
         Assertions.assertEquals(0, contasDepoisExclusao.size());
+    }
+
+    @Test
+    void naoDeveDeletarContaComLancamentoAssociado() {
+
+        //Arrange
+        String nomeContaCorrente = "Conta Corrente";
+        Conta contaCorrente = Conta.builder().nome(nomeContaCorrente).usuario(usuarioPadrao).build();
+
+        String nomeCategoriaAlimentacao = "Alimentacao";
+        Categoria categoriaAlimentacao = Categoria.builder().nome(nomeCategoriaAlimentacao).usuario(usuarioPadrao).build();
+
+        contaRepository.save(contaCorrente);
+        categoriaRepository.save(categoriaAlimentacao);
+
+        BigDecimal valorLancamento = BigDecimal.TEN;
+
+        Lancamento lancamentoPizza = Lancamento.builder()
+                .nome("Pizza")
+                .valor(valorLancamento)
+                .data(LocalDate.parse("03-05-2024", java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+                .pago(false)
+                .conta(contaCorrente)
+                .categoria(categoriaAlimentacao)
+                .build();
+
+        lancamentoRepository.save(lancamentoPizza);
+
+        List<Conta> contas = contaRepository.findAll();
+
+        //Assert
+        //Verifica que a conta foi incluida
+        Assertions.assertEquals(1, contas.size());
+
+        String idConta = contas.getFirst().getId();
+
+        //Assert
+        Assertions.assertThrows(
+                //Assert
+                NegocioException.class,
+                //Act
+                () -> contaService.deletarConta(idConta, usuarioPadrao.getLogin())
+        );
     }
 }

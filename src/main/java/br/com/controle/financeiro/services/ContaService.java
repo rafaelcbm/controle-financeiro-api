@@ -82,9 +82,8 @@ public class ContaService {
 
         validacaoDadosUsuarioService.validarContaDoUsuarioLogado(idConta, userLogin);
 
-
         Conta conta = contaRepository.findById(idConta).orElseThrow();
-        if (!conta.getLancamentos().isEmpty()) {
+        if (conta.getLancamentos() != null && !conta.getLancamentos().isEmpty()) {
             throw new NegocioException("Não é possível remover essa conta, pois ela possui lançamentos associados.");
         }
         contaRepository.deleteById(idConta);

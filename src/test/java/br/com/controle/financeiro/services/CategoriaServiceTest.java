@@ -2,6 +2,8 @@ package br.com.controle.financeiro.services;
 
 import br.com.controle.financeiro.controllers.dto.CategoriaRequestDTO;
 import br.com.controle.financeiro.domain.Categoria;
+import br.com.controle.financeiro.domain.Conta;
+import br.com.controle.financeiro.domain.Lancamento;
 import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.repositories.CategoriaRepository;
 import br.com.controle.financeiro.repositories.UsuarioRepository;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -159,6 +163,9 @@ class CategoriaServiceTest {
         //Arrange
         String loginUsuario = "user@login.com";
         String idCategoria = "id_Categoria";
+
+        Mockito.when(categoriaRepositoryMock.findById(idCategoria)).thenReturn(Optional.of(Categoria.builder().build()));
+        
         Mockito.doNothing().when(categoriaRepositoryMock).deleteById(idCategoria);
 
         //Act
@@ -167,6 +174,35 @@ class CategoriaServiceTest {
         //Assert
         Mockito.verify(validacaoDadosUsuarioServiceMock).validarCategoriaDoUsuarioLogado(idCategoria, loginUsuario);
         Mockito.verify(categoriaRepositoryMock).deleteById(idCategoria);
+    }
+
+    @Test
+    void naoDeveDeletarCategoriaComLancamentoAssociado() {
+
+        //Arrange
+        String loginUsuario = "user@login.com";
+        String idCategoria = "id_Categoria";
+
+        Categoria categoriaAlimentacao = Categoria.builder().nome("Alimentação").build();
+
+        List<Lancamento> lancamentos = List.of(Lancamento.builder()
+                .categoria(categoriaAlimentacao).nome("Pipoca")
+                .conta(Conta.builder().build())
+                .valor(BigDecimal.valueOf(123.45))
+                .data(LocalDate.now())
+                .build());
+
+        categoriaAlimentacao.setLancamentos(lancamentos);
+
+        Mockito.when(categoriaRepositoryMock.findById(idCategoria)).thenReturn(Optional.of(categoriaAlimentacao));
+
+        //Assert
+        Assertions.assertThrows(
+                //Assert
+                NegocioException.class,
+                //Act
+                () -> categoriaService.deletarCategoria(idCategoria, loginUsuario)
+        );
     }
 
     @Test
