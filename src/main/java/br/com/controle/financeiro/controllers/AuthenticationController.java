@@ -6,6 +6,7 @@ import br.com.controle.financeiro.domain.user.RegisterDTO;
 import br.com.controle.financeiro.domain.user.Usuario;
 import br.com.controle.financeiro.infra.security.TokenService;
 import br.com.controle.financeiro.repositories.UsuarioRepository;
+import br.com.controle.financeiro.services.exception.NegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +48,9 @@ public class AuthenticationController {
     )
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
-        if (this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+        if (this.repository.findByLogin(data.login()) != null) {
+        	throw new NegocioException("Usuário já existente.");
+        }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         Usuario newUsuario = new Usuario(data.login(), encryptedPassword, data.role());
