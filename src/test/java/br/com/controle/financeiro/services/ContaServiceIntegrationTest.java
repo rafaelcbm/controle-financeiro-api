@@ -48,6 +48,8 @@ class ContaServiceIntegrationTest {
     }
 
     private void limparBase() {
+    	lancamentoRepository.deleteAll();
+    	categoriaRepository.deleteAll();
         contaRepository.deleteAll();
         usuarioRepository.deleteAll();
     }
